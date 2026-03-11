@@ -18,6 +18,8 @@ export interface HexCell {
   water?: number;
   flow?: HexCell | null;
   riverMask?: number;
+  sediment?: number; // Sediment transport capacity for river systems
+  riverWidth?: number; // Width of river in hex units (for rendering)
 }
 
 export class HexGrid {

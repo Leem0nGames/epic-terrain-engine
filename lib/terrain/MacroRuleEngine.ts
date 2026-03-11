@@ -8,6 +8,8 @@ export type MacroTerrainRule = {
   sprite: string;
   layer: number;
   rotatable?: boolean;
+  priority?: number; // Higher priority rules override lower ones
+  probability?: number; // 0-1 chance of applying when matched (default 1.0)
 };
 
 // Mapping from 3x3 pattern to hex directions
@@ -52,7 +54,7 @@ export class MacroRuleEngine {
     }
   }
 
-  evaluate(grid: HexGrid): Map<string, MacroMatch[]> {
+    evaluate(grid: HexGrid): Map<string, MacroMatch[]> {
     const matches = new Map<string, MacroMatch[]>();
 
     for (const cell of grid.values()) {
@@ -65,6 +67,11 @@ export class MacroRuleEngine {
       ];
 
       for (const rule of candidateRules) {
+        // Apply probability check
+        if (rule.probability !== undefined && Math.random() > rule.probability) {
+          continue; // Skip this rule based on probability
+        }
+        
         // Check all 6 rotations if rotatable, otherwise just 0
         const maxRotations = rule.rotatable ? 6 : 1;
         
@@ -84,8 +91,17 @@ export class MacroRuleEngine {
       }
 
       if (cellMatches.length > 0) {
-        // Sort by layer
-        cellMatches.sort((a, b) => a.layer - b.layer);
+        // Sort by priority (higher first), then by layer
+        cellMatches.sort((a, b) => {
+          const ruleA = this.rules.find(r => r.id === a.ruleId);
+          const ruleB = this.rules.find(r => r.id === b.ruleId);
+          const priorityA = ruleA?.priority ?? 0;
+          const priorityB = ruleB?.priority ?? 0;
+          if (priorityA !== priorityB) {
+            return priorityB - priorityA; // Higher priority first
+          }
+          return a.layer - b.layer; // Then by layer
+        });
         matches.set(`${cell.q},${cell.r}`, cellMatches);
       }
     }

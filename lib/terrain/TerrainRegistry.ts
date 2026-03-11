@@ -1,4 +1,4 @@
-export const USE_WESNOTH_CDN_ASSETS = true;
+export const USE_WESNOTH_CDN_ASSETS = false;
 export const WESNOTH_ASSET_BASE = "https://cdn.jsdelivr.net/gh/wesnoth/wesnoth@1.18.0/data/core/images/terrain/";
 export const LOCAL_ASSET_BASE = "/assets/terrain/";
 
@@ -60,6 +60,31 @@ export const DECORATION_REGISTRY: Record<string, { base: string[], offsetY?: num
       `${getAssetBase()}embellishments/mushroom1.png`,
       `${getAssetBase()}embellishments/mushroom2.png`
     ]
+  },
+  // Additional decoration types
+  "crystals": {
+    base: [
+      `${getAssetBase()}embellishments/crystal1.png`,
+      `${getAssetBase()}embellishments/crystal2.png`
+    ]
+  },
+  "ancient-ruins": {
+    base: [
+      `${getAssetBase()}embellishments/ruins1.png`,
+      `${getAssetBase()}embellishments/ruins2.png`
+    ]
+  },
+  "dead-tree": {
+    base: [
+      `${getAssetBase()}embellishments/deadtree1.png`,
+      `${getAssetBase()}embellishments/deadtree2.png`
+    ]
+  },
+  "spring": {
+    base: [
+      `${getAssetBase()}embellishments/spring1.png`,
+      `${getAssetBase()}embellishments/spring2.png`
+    ]
   }
 };
 
@@ -69,9 +94,12 @@ export const TERRAIN_REGISTRY: Record<string, TerrainDef> = {
     name: "Grass",
     color: "#22c55e",
     base: [
-      `${getAssetBase()}grass/green.png`
+      `${getAssetBase()}grass/green1.png`,
+      `${getAssetBase()}grass/green2.png`,
+      `${getAssetBase()}grass/green3.png`,
+      `${getAssetBase()}grass/green4.png`
     ],
-    variations: 1,
+    variations: 4,
     transitions: true,
     zIndex: 1,
     movementCost: 1

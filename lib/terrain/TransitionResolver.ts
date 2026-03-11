@@ -12,11 +12,11 @@ export class TransitionResolver {
         const neighbor = cell.neighbors[dir];
         if (neighbor && neighbor.terrainCode !== cell.terrainCode) {
           const neighborDef = TERRAIN_REGISTRY[neighbor.terrainCode];
-          // Only draw transition if we have a higher z-index than the neighbor,
-          // or if z-index is equal and our terrain code is alphabetically greater (deterministic tie-breaker)
+          // Only draw transition if neighbor has a higher z-index than us,
+          // or if z-index is equal and neighbor's terrain code is alphabetically greater (deterministic tie-breaker)
           if (neighborDef) {
-            if (currentDef.zIndex > neighborDef.zIndex || 
-               (currentDef.zIndex === neighborDef.zIndex && cell.terrainCode > neighbor.terrainCode)) {
+            if (neighborDef.zIndex > currentDef.zIndex || 
+               (neighborDef.zIndex === currentDef.zIndex && neighbor.terrainCode > cell.terrainCode)) {
               const t = neighbor.terrainCode;
               const prev = masks.get(t) ?? 0;
               masks.set(t, prev | (1 << dir));

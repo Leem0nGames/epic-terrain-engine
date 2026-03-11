@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { TERRAIN_REGISTRY } from '../lib/terrain/TerrainRegistry';
 import { HexGridRenderer } from '../components/HexGridRenderer';
 import { MapGenerator } from '../lib/terrain/MapGenerator';
+import { TectonicMapGenerator } from '../lib/terrain/TectonicMapGenerator';
 import { TerrainResolver } from '../lib/terrain/TerrainResolver';
 import { TransitionResolver } from '../lib/terrain/TransitionResolver';
 import { OverlayResolver } from '../lib/terrain/OverlayResolver';
@@ -13,13 +14,24 @@ import { UnitInstance, UNIT_REGISTRY } from '../lib/units/UnitRegistry';
 export default function Page() {
   const [seed, setSeed] = useState(Math.floor(Math.random() * 10000));
   const [debug, setDebug] = useState(false);
+  const [useTectonic, setUseTectonic] = useState(false);
   const [units, setUnits] = useState<UnitInstance[]>([]);
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
 
   const selectedUnit = units.find(u => u.id === selectedUnitId) || null;
 
   const mapData = useMemo(() => {
-    const grid = MapGenerator.generate({ width: 30, height: 20, seed });
+    let grid: HexGrid;
+    if (useTectonic) {
+      grid = TectonicMapGenerator.generate({ 
+        width: 30, 
+        height: 20, 
+        seed,
+        plateCount: 12
+      });
+    } else {
+      grid = MapGenerator.generate({ width: 30, height: 20, seed });
+    }
     TerrainResolver.resolve(grid);
     TransitionResolver.resolve(grid);
     OverlayResolver.resolve(grid);
@@ -62,7 +74,7 @@ export default function Page() {
     setUnits(initialUnits);
 
     return { grid };
-  }, [seed]);
+  }, [seed, useTectonic]);
 
   const { grid } = mapData;
 
@@ -121,26 +133,32 @@ export default function Page() {
             <h1 className="text-4xl font-bold tracking-tight mb-2">Wesnoth-style Terrain Engine</h1>
             <p className="text-slate-400">Procedural Biome Generation with Autotiling.</p>
           </div>
-          <div className="flex gap-4">
-            <button 
-              onClick={() => setDebug(!debug)}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors"
-            >
-              {debug ? 'Hide Debug' : 'Show Debug'}
-            </button>
-            <button 
-              onClick={endTurn}
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-sm font-medium transition-colors"
-            >
-              End Turn
-            </button>
-            <button 
-              onClick={() => setSeed(Math.floor(Math.random() * 10000))}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-medium transition-colors"
-            >
-              Generate New Map
-            </button>
-          </div>
+           <div className="flex gap-4">
+             <button 
+               onClick={() => setDebug(!debug)}
+               className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors"
+             >
+               {debug ? 'Hide Debug' : 'Show Debug'}
+             </button>
+             <button 
+               onClick={() => setUseTectonic(!useTectonic)}
+               className={`px-4 py-2 ${useTectonic ? 'bg-purple-600 hover:bg-purple-500' : 'bg-blue-600 hover:bg-blue-500'} rounded-lg text-sm font-medium transition-colors`}
+             >
+               {useTectonic ? 'Noise Map' : 'Tectonic Map'}
+             </button>
+             <button 
+               onClick={endTurn}
+               className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-sm font-medium transition-colors"
+             >
+               End Turn
+             </button>
+             <button 
+               onClick={() => setSeed(Math.floor(Math.random() * 10000))}
+               className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-medium transition-colors"
+             >
+               Generate New Map
+             </button>
+           </div>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">

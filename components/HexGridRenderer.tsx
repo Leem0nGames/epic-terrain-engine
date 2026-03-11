@@ -240,6 +240,9 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
     const ctx = chunk.canvas.getContext('2d');
     if (!ctx) return;
     
+    // Disable image smoothing for crisp pixel art
+    ctx.imageSmoothingEnabled = false;
+    
     ctx.clearRect(0, 0, width, height);
     ctx.save();
     ctx.translate(-chunk.bounds.minX, -chunk.bounds.minY);
@@ -256,55 +259,36 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
       return a.x - b.x;
     });
 
-    // Layer 0: Base Terrain
-    sortedHexes.forEach(({ hex, x, y }) => {
-      // Skip drawing base terrain for rivers if we are drawing them procedurally
-      if (hex.terrainCode === 'Rr') {
-        // Draw grass underneath the river
-        const grassDef = TERRAIN_REGISTRY['Gg'];
-        if (grassDef && grassDef.base.length > 0) {
-          const url = grassDef.base[hex.variation % grassDef.base.length];
-          const uv = atlasRef.current?.getUV(url);
-          if (uv && atlasRef.current) {
-            const drawWidth = uv.w * scale;
-            const drawHeight = uv.h * scale;
-            const offsetY = (grassDef.offsetY || 0) * scale;
-            ctx.drawImage(
-              atlasRef.current.canvas, 
-              uv.x, uv.y, uv.w, uv.h,
-              x - drawWidth / 2, y - drawHeight / 2 + offsetY, drawWidth, drawHeight
-            );
-          } else {
-            drawHexPolygon(ctx, x, y, size, grassDef.color);
-          }
-        } else {
-          drawHexPolygon(ctx, x, y, size, '#22c55e');
-        }
-        return;
-      }
+     // Layer 0: Base Terrain with Blending
+     sortedHexes.forEach(({ hex, x, y }) => {
+       // Skip drawing base terrain for rivers if we are drawing them procedurally
+       if (hex.terrainCode === 'Rr') {
+         // Draw grass underneath the river
+         const grassDef = TERRAIN_REGISTRY['Gg'];
+         if (grassDef && grassDef.base.length > 0) {
+           const url = grassDef.base[hex.variation % grassDef.base.length];
+           const uv = atlasRef.current?.getUV(url);
+           if (uv && atlasRef.current) {
+             const drawWidth = uv.w * scale;
+             const drawHeight = uv.h * scale;
+             const offsetY = (grassDef.offsetY || 0) * scale;
+             ctx.drawImage(
+               atlasRef.current.canvas, 
+               uv.x, uv.y, uv.w, uv.h,
+               x - drawWidth / 2, y - drawHeight / 2 + offsetY, drawWidth, drawHeight
+             );
+           } else {
+             drawHexPolygon(ctx, x, y, size, grassDef.color);
+           }
+         } else {
+           drawHexPolygon(ctx, x, y, size, '#22c55e');
+         }
+         return;
+       }
 
-      const def = TERRAIN_REGISTRY[hex.terrainCode];
-      
-      if (def && def.base.length > 0) {
-        const url = def.base[hex.variation % def.base.length];
-        const uv = atlasRef.current?.getUV(url);
-        
-        if (uv && atlasRef.current) {
-          const drawWidth = uv.w * scale;
-          const drawHeight = uv.h * scale;
-          const offsetY = (def.offsetY || 0) * scale;
-          ctx.drawImage(
-            atlasRef.current.canvas, 
-            uv.x, uv.y, uv.w, uv.h,
-            x - drawWidth / 2, y - drawHeight / 2 + offsetY, drawWidth, drawHeight
-          );
-        } else {
-          drawHexPolygon(ctx, x, y, size, def.color);
-        }
-      } else if (def) {
-        drawHexPolygon(ctx, x, y, size, def.color);
-      }
-    });
+        // Get blended terrain rendering
+        renderBlendedTerrain(ctx, hex, x, y, size, atlasRef.current, scale);
+     });
 
     // Layer 1: Transitions
     sortedHexes.forEach(({ hex, x, y }) => {
@@ -377,12 +361,13 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
       });
     });
 
-    // Layer 2.5: Procedural Rivers
-    sortedHexes.forEach(({ hex, x, y }) => {
-      if (hex.terrainCode === 'Rr' && hex.riverMask !== undefined) {
-        drawRiver(ctx, x, y, size, hex.riverMask);
-      }
-    });
+     // Layer 2.5: Procedural Rivers
+     sortedHexes.forEach(({ hex, x, y }) => {
+       if (hex.terrainCode === 'Rr' && hex.riverMask !== undefined) {
+         const width = hex.riverWidth || 0.35; // Default width if not set
+         drawRiver(ctx, x, y, size, hex.riverMask, width);
+       }
+     });
 
     // Layer 3 & 4: Overlays
     sortedHexes.forEach(({ hex, x, y }) => {
@@ -474,12 +459,15 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
   }, [size, debug, macroMatches]);
 
   // Main render loop
-  const renderFrame = useCallback(() => {
+   const renderFrame = useCallback(() => {
     if (!canvasRef.current || !containerRef.current || !imagesLoaded) return;
-    
+   
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    
+    // Disable image smoothing for crisp pixel art
+    ctx.imageSmoothingEnabled = false;
     
     const dpr = window.devicePixelRatio || 1;
     const rect = containerRef.current.getBoundingClientRect();
@@ -657,21 +645,73 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
     }
   }, [imagesLoaded, renderChunk, debug]);
 
-  // Animation loop
-  useEffect(() => {
-    let animationFrameId: number;
-    
-    const loop = () => {
-      renderFrame();
-      animationFrameId = requestAnimationFrame(loop);
-    };
-    
-    loop();
-    
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [renderFrame]);
+   // Animation loop
+   useEffect(() => {
+     let animationFrameId: number;
+     
+     const loop = () => {
+       renderFrame();
+       animationFrameId = requestAnimationFrame(loop);
+     };
+     
+     loop();
+     
+     return () => {
+       cancelAnimationFrame(animationFrameId);
+     };
+   }, [renderFrame]);
+
+   // Blended terrain rendering with proper alpha blending for smooth transitions
+   const renderBlendedTerrain = (ctx: CanvasRenderingContext2D, hex: HexCell, x: number, y: number, size: number, atlas: TextureAtlas | null, scale: number) => {
+     const def = TERRAIN_REGISTRY[hex.terrainCode];
+     
+     // If no atlas or no base textures, fall back to solid color
+     if (!def || !def.base || def.base.length === 0 || !atlas) {
+       drawHexPolygon(ctx, x, y, size, def?.color ?? '#22c55e');
+       return;
+     }
+
+     // Get the base terrain texture
+     const baseUrl = def.base[hex.variation % def.base.length];
+     const baseUv = atlas?.getUV(baseUrl);
+     
+     // If we have transition masks, we need to blend with neighboring terrains
+     const masks = hex.transitionMasks;
+     if (masks.size === 0 || !baseUv) {
+       // No transitions, just render base terrain
+       if (baseUv && atlas) {
+         const drawWidth = baseUv.w * scale;
+         const drawHeight = baseUv.h * scale;
+         const offsetY = (def.offsetY || 0) * scale;
+         ctx.drawImage(
+           atlas.canvas, 
+           baseUv.x, baseUv.y, baseUv.w, baseUv.h,
+           x - drawWidth / 2, y - drawHeight / 2 + offsetY, drawWidth, drawHeight
+         );
+       } else {
+         drawHexPolygon(ctx, x, y, size, def.color);
+       }
+       return;
+     }
+
+     // For now, we'll use a simple approach: render base terrain and let transition tiles handle blending
+     // A more sophisticated approach would sample multiple textures and blend them in the fragment shader
+     // But for sprite-based rendering, we rely on the transition tiles to create the blended appearance
+     
+     // Render base terrain
+     if (baseUv && atlas) {
+       const drawWidth = baseUv.w * scale;
+       const drawHeight = baseUv.h * scale;
+       const offsetY = (def.offsetY || 0) * scale;
+       ctx.drawImage(
+         atlas.canvas, 
+         baseUv.x, baseUv.y, baseUv.w, baseUv.h,
+         x - drawWidth / 2, y - drawHeight / 2 + offsetY, drawWidth, drawHeight
+       );
+     } else {
+       drawHexPolygon(ctx, x, y, size, def.color);
+     }
+   };
 
   // Event handlers for panning and zooming
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -865,15 +905,15 @@ function drawHexPolygon(ctx: CanvasRenderingContext2D, x: number, y: number, siz
   ctx.restore();
 }
 
-function drawRiver(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, mask: number) {
+function drawRiver(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, mask: number, width: number = 0.35) {
   ctx.save();
   ctx.translate(x, y);
   
-  // River style
-  ctx.strokeStyle = '#0ea5e9'; // Bright blue
-  ctx.lineWidth = size * 0.35;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
+   // River style
+   ctx.strokeStyle = '#0ea5e9'; // Bright blue
+   ctx.lineWidth = size * width;
+   ctx.lineCap = 'round';
+   ctx.lineJoin = 'round';
 
   const angles = [
     Math.PI / 6,        // 0: Right (30 deg)
