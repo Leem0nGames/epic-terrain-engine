@@ -35,13 +35,19 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
   const createHexSprite = (hex: HexCell, hexSize: number): PIXI.Sprite | null => {
     // Obtener nombre del sprite basado en el terreno
     const terrainDef = TERRAIN_REGISTRY[hex.terrainCode];
-    if (!terrainDef || terrainDef.base.length === 0) return null;
+    if (!terrainDef || terrainDef.base.length === 0) {
+      console.log(`No terrain definition for: ${hex.terrainCode}`);
+      return null;
+    }
 
     // Usar la primera variación para ahora
     const spriteName = terrainDef.base[0].replace('/assets/terrain/', '').replace('.png', '');
     
     const texture = AtlasLoader.getTexture(spriteName);
-    if (!texture) return null;
+    if (!texture) {
+      console.log(`No texture for sprite: ${spriteName}`);
+      return null;
+    }
 
     const sprite = new PIXI.Sprite(texture);
     
@@ -137,6 +143,11 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       const world = new PIXI.Container();
       app.stage.addChild(world);
       worldRef.current = world;
+      
+      // Centrar la cámara inicialmente
+      world.x = width / 2;
+      world.y = height / 2;
+      console.log('Camera centered at:', world.x, world.y);
 
       // Cargar atlas si no está cargado
       async function loadAtlas() {
@@ -145,9 +156,15 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
             await AtlasLoader.load();
           }
           
+          console.log('Atlas loaded, generating chunks...');
           // Generar chunks una vez cargado el atlas
           generateChunks(world, grid, size);
           setIsLoading(false);
+          
+          // Log de sprites disponibles para debug
+          const sprites = AtlasLoader.getSpriteList();
+          console.log(`Sprites disponibles: ${sprites.length}`);
+          console.log('Primeros 10 sprites:', sprites.slice(0, 10));
         } catch (err) {
           console.error('Error cargando atlas:', err);
           setError('Error loading terrain assets');
