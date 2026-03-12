@@ -1,6 +1,8 @@
 export const USE_WESNOTH_CDN_ASSETS = false;
 export const WESNOTH_ASSET_BASE = "https://cdn.jsdelivr.net/gh/wesnoth/wesnoth@1.18.0/data/core/images/terrain/";
 export const LOCAL_ASSET_BASE = "/assets/terrain/";
+export const ATLAS_PATH = "/generated/terrain-atlas.webp";
+export const ATLAS_METADATA_PATH = "/generated/terrain-atlas.json";
 
 export const getAssetBase = () => USE_WESNOTH_CDN_ASSETS ? WESNOTH_ASSET_BASE : LOCAL_ASSET_BASE;
 
