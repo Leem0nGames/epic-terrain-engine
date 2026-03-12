@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as PIXI from 'pixi.js';
 import { HexGrid, HexCell } from '../lib/hex/HexGrid';
 import { AtlasLoader } from '../lib/terrain/AtlasLoader';
@@ -32,106 +32,122 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Inicializar Pixi.js Application
-    const app = new PIXI.Application({
-      width: containerRef.current.clientWidth,
-      height: containerRef.current.clientHeight,
-      backgroundColor: 0x1a1a2e, // Color de fondo oscuro
-      antialias: true,
-      resolution: window.devicePixelRatio || 1,
-      autoDensity: true,
-    });
-
-    // Pixi.js 7: app.view es un ICanvas, necesitamos acceder al canvas real
-    const canvas = app.view as unknown as HTMLCanvasElement;
-    if (canvas && containerRef.current) {
-      containerRef.current.appendChild(canvas);
-    }
-    appRef.current = app;
-
-    // Contenedor principal para el mundo (para aplicar zoom y pan)
-    const world = new PIXI.Container();
-    app.stage.addChild(world);
-    worldRef.current = world;
-
-    // Cargar atlas si no está cargado
-    async function loadAtlas() {
-      if (!AtlasLoader.isLoaded()) {
-        try {
-          await AtlasLoader.load();
-        } catch (error) {
-          console.error('Error cargando atlas:', error);
-        }
-      }
-      
-      // Generar chunks una vez cargado el atlas
-      generateChunks(world, grid, size);
-    }
-
-    loadAtlas();
-
-    // Manejar eventos de mouse para cámara
-    const handleMouseDown = (e: MouseEvent) => {
-      isDraggingRef.current = true;
-      lastMouseRef.current = { x: e.clientX, y: e.clientY };
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isDraggingRef.current || !worldRef.current) return;
-      
-      const dx = e.clientX - lastMouseRef.current.x;
-      const dy = e.clientY - lastMouseRef.current.y;
-      
-      worldRef.current.x += dx;
-      worldRef.current.y += dy;
-      
-      lastMouseRef.current = { x: e.clientX, y: e.clientY };
-    };
-
-    const handleMouseUp = () => {
-      isDraggingRef.current = false;
-    };
-
-    const handleWheel = (e: WheelEvent) => {
-      if (!worldRef.current) return;
-      
-      e.preventDefault();
-      const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
-      const newZoom = Math.max(0.1, Math.min(5, worldRef.current.scale.x * zoomFactor));
-      
-      worldRef.current.scale.set(newZoom);
-      setCamera(prev => ({ ...prev, zoom: newZoom }));
-    };
-
-    containerRef.current.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-    containerRef.current.addEventListener('wheel', handleWheel, { passive: false });
-
-    // Manejar resize
-    const handleResize = () => {
+    // Esperar a que el contenedor tenga dimensiones
+    const initPixi = () => {
       if (!containerRef.current) return;
-      app.renderer.resize(
-        containerRef.current.clientWidth,
-        containerRef.current.clientHeight
-      );
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    // Limpiar al desmontar
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      containerRef.current?.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-      containerRef.current?.removeEventListener('wheel', handleWheel);
       
-      if (worldRef.current) {
-        worldRef.current.destroy();
+      const width = containerRef.current.clientWidth;
+      const height = containerRef.current.clientHeight;
+      
+      if (width === 0 || height === 0) {
+        setTimeout(initPixi, 50);
+        return;
       }
-      app.destroy(true, { children: true, texture: true, baseTexture: true });
+
+      // Inicializar Pixi.js Application
+      const app = new PIXI.Application({
+        width,
+        height,
+        backgroundColor: 0x1a1a2e, // Color de fondo oscuro
+        antialias: true,
+        resolution: window.devicePixelRatio || 1,
+        autoDensity: true,
+      });
+
+      // Append canvas to container
+      const canvas = app.view as unknown as Node;
+      containerRef.current.appendChild(canvas);
+      appRef.current = app;
+
+      // Contenedor principal para el mundo
+      const world = new PIXI.Container();
+      app.stage.addChild(world);
+      worldRef.current = world;
+
+      // Cargar atlas si no está cargado
+      async function loadAtlas() {
+        if (!AtlasLoader.isLoaded()) {
+          try {
+            await AtlasLoader.load();
+          } catch (error) {
+            console.error('Error cargando atlas:', error);
+          }
+        }
+        
+        // Generar chunks una vez cargado el atlas
+        generateChunks(world, grid, size);
+      }
+
+      loadAtlas();
+
+      // Manejar eventos de mouse para cámara
+      const handleMouseDown = (e: MouseEvent) => {
+        isDraggingRef.current = true;
+        lastMouseRef.current = { x: e.clientX, y: e.clientY };
+      };
+
+      const handleMouseMove = (e: MouseEvent) => {
+        if (!isDraggingRef.current || !worldRef.current) return;
+        
+        const dx = e.clientX - lastMouseRef.current.x;
+        const dy = e.clientY - lastMouseRef.current.y;
+        
+        worldRef.current.x += dx;
+        worldRef.current.y += dy;
+        
+        lastMouseRef.current = { x: e.clientX, y: e.clientY };
+      };
+
+      const handleMouseUp = () => {
+        isDraggingRef.current = false;
+      };
+
+      const handleWheel = (e: WheelEvent) => {
+        if (!worldRef.current) return;
+        
+        e.preventDefault();
+        const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+        const newZoom = Math.max(0.1, Math.min(5, worldRef.current.scale.x * zoomFactor));
+        
+        worldRef.current.scale.set(newZoom);
+        setCamera(prev => ({ ...prev, zoom: newZoom }));
+      };
+
+      containerRef.current.addEventListener('mousedown', handleMouseDown);
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+      containerRef.current.addEventListener('wheel', handleWheel, { passive: false });
+
+      // Manejar resize
+      const handleResize = () => {
+        if (!containerRef.current || !appRef.current) return;
+        appRef.current.renderer.resize(
+          containerRef.current.clientWidth,
+          containerRef.current.clientHeight
+        );
+      };
+
+      window.addEventListener('resize', handleResize);
+
+      // Limpiar al desmontar
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        containerRef.current?.removeEventListener('mousedown', handleMouseDown);
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+        containerRef.current?.removeEventListener('wheel', handleWheel);
+        
+        if (worldRef.current) {
+          worldRef.current.destroy();
+        }
+        app.destroy(true, { children: true, texture: true, baseTexture: true });
+      };
     };
+
+    // Inicializar Pixi
+    const cleanup = initPixi();
+    
+    return cleanup;
   }, [grid, size]);
 
   /**
