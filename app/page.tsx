@@ -130,6 +130,11 @@ export default function Page() {
     })));
   };
 
+  const resetCamera = () => {
+    // Recargar la página para resetear la cámara
+    window.location.reload();
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-50 font-sans overflow-hidden">
       {/* Header Bar */}
@@ -225,6 +230,7 @@ export default function Page() {
               useTectonic={useTectonic}
               onToggleDebug={() => setDebug(!debug)}
               debug={debug}
+              onResetCamera={resetCamera}
             />
           </div>
         </div>
