@@ -168,14 +168,26 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
           }
           
           console.log('Atlas loaded, generating chunks...');
-          // Generar chunks una vez cargado el atlas
-          generateChunks(world, grid, size);
-          setIsLoading(false);
-          
-          // Log de sprites disponibles para debug
-          const sprites = AtlasLoader.getSpriteList();
-          console.log(`Sprites disponibles: ${sprites.length}`);
-          console.log('Primeros 10 sprites:', sprites.slice(0, 10));
+      // Generar chunks una vez cargado el atlas
+      generateChunks(world, grid, size);
+      setIsLoading(false);
+      
+      // Log de sprites disponibles para debug
+      const sprites = AtlasLoader.getSpriteList();
+      console.log(`Sprites disponibles: ${sprites.length}`);
+      console.log('Primeros 10 sprites:', sprites.slice(0, 10));
+      
+      // DEBUG: Dibujar un círculo rojo para verificar renderizado
+      if (app) {
+        const debugGraphics = new PIXI.Graphics();
+        debugGraphics.beginFill(0xFF0000);
+        debugGraphics.drawCircle(0, 0, 20);
+        debugGraphics.endFill();
+        debugGraphics.x = width / 2;
+        debugGraphics.y = height / 2;
+        app.stage.addChild(debugGraphics);
+        console.log('Debug circle added at center');
+      }
         } catch (err) {
           console.error('Error cargando atlas:', err);
           setError('Error loading terrain assets');
