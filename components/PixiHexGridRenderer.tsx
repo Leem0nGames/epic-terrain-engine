@@ -144,16 +144,21 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       app.stage.addChild(world);
       worldRef.current = world;
       
-      // Centrar la cámara inicialmente en el medio del mapa
-      // Calcular el centro del mapa basado en las dimensiones de la grid
-      const gridWidth = 30 * size * 1.5; // Aproximación del ancho del mapa
-      const gridHeight = 20 * size * 1.732; // Aproximación de la altura del mapa
+      // Mantener el mundo en (0,0) y mover la cámara (stage) para ver el mapa
+      world.x = 0;
+      world.y = 0;
       
-      world.x = width / 2 - gridWidth / 4; // Ajuste fino
-      world.y = height / 2 - gridHeight / 4; // Ajuste fino
-      world.scale.set(0.5); // Zoom inicial más cercano
+      // Centrar la cámara en el mapa
+      app.stage.x = width / 2;
+      app.stage.y = height / 2;
+      app.stage.scale.set(0.3); // Zoom out para ver más
       
-      console.log('Camera initialized:', { width, height, worldX: world.x, worldY: world.y, scale: world.scale.x });
+      console.log('Camera centered:', { 
+        stageX: app.stage.x, 
+        stageY: app.stage.y, 
+        stageScale: app.stage.scale.x,
+        worldPos: { x: world.x, y: world.y }
+      });
 
       // Cargar atlas si no está cargado
       async function loadAtlas() {
@@ -187,13 +192,13 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       };
 
       const handleMouseMove = (e: MouseEvent) => {
-        if (!isDraggingRef.current || !worldRef.current) return;
+        if (!isDraggingRef.current || !appRef.current) return;
         
         const dx = e.clientX - lastMouseRef.current.x;
         const dy = e.clientY - lastMouseRef.current.y;
         
-        worldRef.current.x += dx;
-        worldRef.current.y += dy;
+        appRef.current.stage.x += dx;
+        appRef.current.stage.y += dy;
         
         lastMouseRef.current = { x: e.clientX, y: e.clientY };
       };
@@ -203,13 +208,13 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       };
 
       const handleWheel = (e: WheelEvent) => {
-        if (!worldRef.current) return;
+        if (!appRef.current) return;
         
         e.preventDefault();
         const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
-        const newZoom = Math.max(0.1, Math.min(5, worldRef.current.scale.x * zoomFactor));
+        const newZoom = Math.max(0.1, Math.min(5, appRef.current.stage.scale.x * zoomFactor));
         
-        worldRef.current.scale.set(newZoom);
+        appRef.current.stage.scale.set(newZoom);
         setCamera(prev => ({ ...prev, zoom: newZoom }));
       };
 
