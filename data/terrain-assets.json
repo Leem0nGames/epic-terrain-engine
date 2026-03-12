@@ -78,20 +78,30 @@
   },
   "water": {
     "base": [
-      "/assets/terrain/water/deep.png",
-      "/assets/terrain/water/deep2.png",
-      "/assets/terrain/water/wave.png",
-      "/assets/terrain/water/wave2.png",
-      "/assets/terrain/water/wave3.png"
+      "/assets/terrain/water/ocean-A01.png",
+      "/assets/terrain/water/ocean-A02.png",
+      "/assets/terrain/water/ocean-A03.png"
     ],
     "tile": [],
     "transitions": [
-      "/assets/terrain/water/deep-n.png",
-      "/assets/terrain/water/deep-ne.png",
-      "/assets/terrain/water/deep-se.png",
-      "/assets/terrain/water/deep-s.png",
-      "/assets/terrain/water/deep-sw.png",
-      "/assets/terrain/water/deep-nw.png"
+      "/assets/terrain/water/ocean-A01-n.png",
+      "/assets/terrain/water/ocean-A01-ne.png",
+      "/assets/terrain/water/ocean-A01-se.png",
+      "/assets/terrain/water/ocean-A01-s.png",
+      "/assets/terrain/water/ocean-A01-sw.png",
+      "/assets/terrain/water/ocean-A01-nw.png",
+      "/assets/terrain/water/ocean-A02-n.png",
+      "/assets/terrain/water/ocean-A02-ne.png",
+      "/assets/terrain/water/ocean-A02-se.png",
+      "/assets/terrain/water/ocean-A02-s.png",
+      "/assets/terrain/water/ocean-A02-sw.png",
+      "/assets/terrain/water/ocean-A02-nw.png",
+      "/assets/terrain/water/ocean-A03-n.png",
+      "/assets/terrain/water/ocean-A03-ne.png",
+      "/assets/terrain/water/ocean-A03-se.png",
+      "/assets/terrain/water/ocean-A03-s.png",
+      "/assets/terrain/water/ocean-A03-sw.png",
+      "/assets/terrain/water/ocean-A03-nw.png"
     ],
     "clusters": []
   },

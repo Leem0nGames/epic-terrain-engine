@@ -8,7 +8,7 @@ import * as path from 'path';
 import https from 'https';
 import { TerrainCache } from '../lib/terrain/TerrainCache';
 
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/wesnoth/wesnoth@master/data/core/images/terrain/';
+const CDN_BASE = 'https://raw.githubusercontent.com/wesnoth/wesnoth/master/data/core/images/terrain/';
 const LOCAL_ASSETS_DIR = path.join(__dirname, '..', 'public', 'assets', 'terrain');
 
 // Estructura de terrenos a descargar
@@ -36,9 +36,11 @@ const TERRAIN_CATEGORIES = {
     ]
   },
   water: {
-    base: ['deep.png', 'deep2.png', 'wave.png', 'wave2.png', 'wave3.png'],
+    base: ['ocean-A01.png', 'ocean-A02.png', 'ocean-A03.png'],
     transitions: [
-      'deep-n.png', 'deep-ne.png', 'deep-se.png', 'deep-s.png', 'deep-sw.png', 'deep-nw.png'
+      'ocean-A01-n.png', 'ocean-A01-ne.png', 'ocean-A01-se.png', 'ocean-A01-s.png', 'ocean-A01-sw.png', 'ocean-A01-nw.png',
+      'ocean-A02-n.png', 'ocean-A02-ne.png', 'ocean-A02-se.png', 'ocean-A02-s.png', 'ocean-A02-sw.png', 'ocean-A02-nw.png',
+      'ocean-A03-n.png', 'ocean-A03-ne.png', 'ocean-A03-se.png', 'ocean-A03-s.png', 'ocean-A03-sw.png', 'ocean-A03-nw.png'
     ]
   },
   forest: {
@@ -198,6 +200,44 @@ function generateAssetsJSON() {
 }
 
 /**
+ * Crear copias de los archivos de agua con los nombres esperados por el código
+ */
+async function createWaterAliases() {
+  console.log('\n🔄 Creando alias para archivos de agua...\n');
+  
+  const waterDir = path.join(LOCAL_ASSETS_DIR, 'water');
+  const aliases = [
+    // Base tiles
+    { source: 'ocean-A01.png', target: 'deep.png' },
+    { source: 'ocean-A02.png', target: 'deep2.png' },
+    { source: 'ocean-A03.png', target: 'wave.png' }, // Usar ocean como wave
+    { source: 'ocean-A04.png', target: 'wave2.png' },
+    { source: 'ocean-A05.png', target: 'wave3.png' },
+    
+    // Transitions
+    { source: 'ocean-A01-n.png', target: 'deep-n.png' },
+    { source: 'ocean-A01-ne.png', target: 'deep-ne.png' },
+    { source: 'ocean-A01-se.png', target: 'deep-se.png' },
+    { source: 'ocean-A01-s.png', target: 'deep-s.png' },
+    { source: 'ocean-A01-sw.png', target: 'deep-sw.png' },
+    { source: 'ocean-A01-nw.png', target: 'deep-nw.png' },
+  ];
+
+  for (const alias of aliases) {
+    const sourcePath = path.join(waterDir, alias.source);
+    const targetPath = path.join(waterDir, alias.target);
+    
+    if (fs.existsSync(sourcePath) && !fs.existsSync(targetPath)) {
+      // Copiar el archivo en lugar de crear enlace simbólico (más compatible)
+      fs.copyFileSync(sourcePath, targetPath);
+      console.log(`✅ Alias creado: ${alias.target} ← ${alias.source}`);
+    } else if (!fs.existsSync(sourcePath)) {
+      console.log(`⚠️  Fuente no encontrada: ${alias.source}`);
+    }
+  }
+}
+
+/**
  * Main function
  */
 async function main() {
@@ -216,6 +256,9 @@ async function main() {
   // Descargar transiciones adicionales para combinaciones de direcciones
   console.log('\n📥 Descargando transiciones adicionales...\n');
   await downloadAdditionalTransitions();
+
+  // Crear alias para archivos de agua
+  await createWaterAliases();
 
   // Generar JSON con la estructura
   generateAssetsJSON();

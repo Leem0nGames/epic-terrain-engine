@@ -57,11 +57,11 @@
   },
   "mountains/basic-s.png": {
     "exists": true,
-    "lastChecked": 1773336548306
+    "lastChecked": 1773339432155
   },
   "mountains/basic-sw.png": {
     "exists": true,
-    "lastChecked": 1773336548233
+    "lastChecked": 1773339432156
   },
   "mountains/basic-nw.png": {
     "exists": true,
@@ -73,11 +73,11 @@
   },
   "mountains/basic-ne-se.png": {
     "exists": true,
-    "lastChecked": 1773336548222
+    "lastChecked": 1773339432157
   },
   "mountains/basic-se-s.png": {
     "exists": true,
-    "lastChecked": 1773336548306
+    "lastChecked": 1773339432157
   },
   "mountains/basic-s-sw.png": {
     "exists": true,
@@ -101,11 +101,11 @@
   },
   "mountains/dry-se.png": {
     "exists": true,
-    "lastChecked": 1773336548232
+    "lastChecked": 1773339432158
   },
   "mountains/dry-s.png": {
     "exists": true,
-    "lastChecked": 1773336548289
+    "lastChecked": 1773339432158
   },
   "mountains/dry-sw.png": {
     "exists": true,
@@ -117,7 +117,7 @@
   },
   "mountains/snow-n.png": {
     "exists": true,
-    "lastChecked": 1773336548224
+    "lastChecked": 1773339432159
   },
   "mountains/snow-ne.png": {
     "exists": true,
@@ -125,11 +125,11 @@
   },
   "mountains/snow-se.png": {
     "exists": true,
-    "lastChecked": 1773336548231
+    "lastChecked": 1773339432159
   },
   "mountains/snow-s.png": {
     "exists": true,
-    "lastChecked": 1773336548277
+    "lastChecked": 1773339432160
   },
   "mountains/snow-sw.png": {
     "exists": true,
@@ -137,7 +137,7 @@
   },
   "mountains/snow-nw.png": {
     "exists": true,
-    "lastChecked": 1773336548222
+    "lastChecked": 1773339432160
   },
   "mountains/basic_range1_1.png": {
     "exists": true,
@@ -205,11 +205,11 @@
   },
   "grass/light.png": {
     "exists": true,
-    "lastChecked": 1773336548645
+    "lastChecked": 1773339432161
   },
   "grass/light2.png": {
     "exists": true,
-    "lastChecked": 1773336548571
+    "lastChecked": 1773339432162
   },
   "grass/green-n.png": {
     "exists": true,
@@ -236,48 +236,48 @@
     "lastChecked": 1773334617883
   },
   "water/deep.png": {
-    "exists": true,
-    "lastChecked": 1773336548894
+    "exists": false,
+    "lastChecked": 1773339356395
   },
   "water/deep2.png": {
-    "exists": true,
-    "lastChecked": 1773336548972
+    "exists": false,
+    "lastChecked": 1773339356380
   },
   "water/wave.png": {
-    "exists": true,
-    "lastChecked": 1773336548889
+    "exists": false,
+    "lastChecked": 1773339356412
   },
   "water/wave2.png": {
-    "exists": true,
-    "lastChecked": 1773336548921
+    "exists": false,
+    "lastChecked": 1773339356392
   },
   "water/wave3.png": {
-    "exists": true,
-    "lastChecked": 1773336548892
+    "exists": false,
+    "lastChecked": 1773339356381
   },
   "water/deep-n.png": {
-    "exists": true,
-    "lastChecked": 1773336548898
+    "exists": false,
+    "lastChecked": 1773339356399
   },
   "water/deep-ne.png": {
-    "exists": true,
-    "lastChecked": 1773336548979
+    "exists": false,
+    "lastChecked": 1773339356385
   },
   "water/deep-se.png": {
-    "exists": true,
-    "lastChecked": 1773336548906
+    "exists": false,
+    "lastChecked": 1773339356413
   },
   "water/deep-s.png": {
-    "exists": true,
-    "lastChecked": 1773336548934
+    "exists": false,
+    "lastChecked": 1773339356395
   },
   "water/deep-sw.png": {
-    "exists": true,
-    "lastChecked": 1773336548969
+    "exists": false,
+    "lastChecked": 1773339356409
   },
   "water/deep-nw.png": {
-    "exists": true,
-    "lastChecked": 1773336548916
+    "exists": false,
+    "lastChecked": 1773339356403
   },
   "forest/pine.png": {
     "exists": true,
@@ -285,35 +285,35 @@
   },
   "forest/tropical.png": {
     "exists": true,
-    "lastChecked": 1773336549232
+    "lastChecked": 1773339432496
   },
   "forest/mixed.png": {
     "exists": true,
-    "lastChecked": 1773336549306
+    "lastChecked": 1773339432497
   },
   "forest/pine-n.png": {
     "exists": true,
-    "lastChecked": 1773336549318
+    "lastChecked": 1773339432497
   },
   "forest/pine-ne.png": {
     "exists": true,
-    "lastChecked": 1773336549222
+    "lastChecked": 1773339432497
   },
   "forest/pine-se.png": {
     "exists": true,
-    "lastChecked": 1773336549223
+    "lastChecked": 1773339432498
   },
   "forest/pine-s.png": {
     "exists": true,
-    "lastChecked": 1773336549240
+    "lastChecked": 1773339432500
   },
   "forest/pine-sw.png": {
     "exists": true,
-    "lastChecked": 1773336549245
+    "lastChecked": 1773339432501
   },
   "forest/pine-nw.png": {
     "exists": true,
-    "lastChecked": 1773336549236
+    "lastChecked": 1773339432501
   },
   "sand/beach.png": {
     "exists": true,
@@ -325,7 +325,7 @@
   },
   "sand/dune.png": {
     "exists": true,
-    "lastChecked": 1773336549816
+    "lastChecked": 1773339432502
   },
   "sand/beach-n.png": {
     "exists": true,
@@ -385,39 +385,39 @@
   },
   "castle/keep.png": {
     "exists": true,
-    "lastChecked": 1773336550168
+    "lastChecked": 1773339555963
   },
   "castle/ruin.png": {
     "exists": true,
-    "lastChecked": 1773336550071
+    "lastChecked": 1773339555963
   },
   "castle/village.png": {
     "exists": true,
-    "lastChecked": 1773336550148
+    "lastChecked": 1773339555964
   },
   "castle/keep-n.png": {
     "exists": true,
-    "lastChecked": 1773336550095
+    "lastChecked": 1773339555964
   },
   "castle/keep-ne.png": {
     "exists": true,
-    "lastChecked": 1773336550242
+    "lastChecked": 1773339555964
   },
   "castle/keep-se.png": {
     "exists": true,
-    "lastChecked": 1773336550082
+    "lastChecked": 1773339555965
   },
   "castle/keep-s.png": {
     "exists": true,
-    "lastChecked": 1773336550067
+    "lastChecked": 1773339555965
   },
   "castle/keep-sw.png": {
     "exists": true,
-    "lastChecked": 1773336550068
+    "lastChecked": 1773339555966
   },
   "castle/keep-nw.png": {
     "exists": true,
-    "lastChecked": 1773336550147
+    "lastChecked": 1773339555966
   },
   "village/human.png": {
     "exists": true,
@@ -433,434 +433,518 @@
   },
   "mountains/mountains-n-ne.png": {
     "exists": true,
-    "lastChecked": 1773336550531
+    "lastChecked": 1773339555967
   },
   "mountains/mountains-ne-se.png": {
     "exists": true,
-    "lastChecked": 1773336550779
+    "lastChecked": 1773339555967
   },
   "mountains/mountains-se-s.png": {
     "exists": true,
-    "lastChecked": 1773336551217
+    "lastChecked": 1773339555968
   },
   "mountains/mountains-s-sw.png": {
     "exists": true,
-    "lastChecked": 1773336551567
+    "lastChecked": 1773339555968
   },
   "mountains/mountains-sw-nw.png": {
     "exists": true,
-    "lastChecked": 1773336551819
+    "lastChecked": 1773339555969
   },
   "mountains/mountains-nw-n.png": {
     "exists": true,
-    "lastChecked": 1773336552151
+    "lastChecked": 1773339555969
   },
   "mountains/mountains-n-ne-se.png": {
     "exists": true,
-    "lastChecked": 1773336552428
+    "lastChecked": 1773339555969
   },
   "mountains/mountains-ne-se-s.png": {
     "exists": true,
-    "lastChecked": 1773336552815
+    "lastChecked": 1773339555970
   },
   "mountains/mountains-se-s-sw.png": {
     "exists": true,
-    "lastChecked": 1773336553140
+    "lastChecked": 1773339555971
   },
   "mountains/mountains-s-sw-nw.png": {
     "exists": true,
-    "lastChecked": 1773336553407
+    "lastChecked": 1773339555971
   },
   "mountains/mountains-sw-nw-n.png": {
     "exists": true,
-    "lastChecked": 1773336553652
+    "lastChecked": 1773339555972
   },
   "mountains/mountains-nw-n-ne.png": {
     "exists": true,
-    "lastChecked": 1773336554110
+    "lastChecked": 1773339555972
   },
   "mountains/mountains-n-se.png": {
     "exists": true,
-    "lastChecked": 1773336554474
+    "lastChecked": 1773339555974
   },
   "mountains/mountains-ne-s.png": {
     "exists": true,
-    "lastChecked": 1773336554890
+    "lastChecked": 1773339555975
   },
   "mountains/mountains-se-sw.png": {
     "exists": true,
-    "lastChecked": 1773336555216
+    "lastChecked": 1773339555975
   },
   "mountains/mountains-s-nw.png": {
     "exists": true,
-    "lastChecked": 1773336555454
+    "lastChecked": 1773339555975
   },
   "mountains/mountains-sw-n.png": {
     "exists": true,
-    "lastChecked": 1773336555792
+    "lastChecked": 1773339555976
   },
   "mountains/mountains-nw-ne.png": {
     "exists": true,
-    "lastChecked": 1773336556027
+    "lastChecked": 1773339555976
   },
   "grass/grass-n-ne.png": {
     "exists": true,
-    "lastChecked": 1773336556277
+    "lastChecked": 1773339555977
   },
   "grass/grass-ne-se.png": {
     "exists": true,
-    "lastChecked": 1773336556544
+    "lastChecked": 1773339555977
   },
   "grass/grass-se-s.png": {
     "exists": true,
-    "lastChecked": 1773336556777
+    "lastChecked": 1773339555977
   },
   "grass/grass-s-sw.png": {
     "exists": true,
-    "lastChecked": 1773336557107
+    "lastChecked": 1773339555978
   },
   "grass/grass-sw-nw.png": {
     "exists": true,
-    "lastChecked": 1773336557445
+    "lastChecked": 1773339555978
   },
   "grass/grass-nw-n.png": {
     "exists": true,
-    "lastChecked": 1773336557792
+    "lastChecked": 1773339555978
   },
   "grass/grass-n-ne-se.png": {
     "exists": true,
-    "lastChecked": 1773336558128
+    "lastChecked": 1773339555979
   },
   "grass/grass-ne-se-s.png": {
     "exists": true,
-    "lastChecked": 1773336558472
+    "lastChecked": 1773339555979
   },
   "grass/grass-se-s-sw.png": {
     "exists": true,
-    "lastChecked": 1773336559271
+    "lastChecked": 1773339555981
   },
   "grass/grass-s-sw-nw.png": {
     "exists": true,
-    "lastChecked": 1773336559508
+    "lastChecked": 1773339555981
   },
   "grass/grass-sw-nw-n.png": {
     "exists": true,
-    "lastChecked": 1773336559766
+    "lastChecked": 1773339555981
   },
   "grass/grass-nw-n-ne.png": {
     "exists": true,
-    "lastChecked": 1773336559998
+    "lastChecked": 1773339555983
   },
   "grass/grass-n-se.png": {
     "exists": true,
-    "lastChecked": 1773336560333
+    "lastChecked": 1773339555983
   },
   "grass/grass-ne-s.png": {
     "exists": true,
-    "lastChecked": 1773336560575
+    "lastChecked": 1773339555984
   },
   "grass/grass-se-sw.png": {
     "exists": true,
-    "lastChecked": 1773336560819
+    "lastChecked": 1773339555984
   },
   "grass/grass-s-nw.png": {
     "exists": true,
-    "lastChecked": 1773336561067
+    "lastChecked": 1773339555985
   },
   "grass/grass-sw-n.png": {
     "exists": true,
-    "lastChecked": 1773336561428
+    "lastChecked": 1773339555985
   },
   "grass/grass-nw-ne.png": {
     "exists": true,
-    "lastChecked": 1773336561663
+    "lastChecked": 1773339555986
   },
   "water/water-n-ne.png": {
     "exists": true,
-    "lastChecked": 1773336562136
+    "lastChecked": 1773339555986
   },
   "water/water-ne-se.png": {
     "exists": true,
-    "lastChecked": 1773336562376
+    "lastChecked": 1773339555986
   },
   "water/water-se-s.png": {
     "exists": true,
-    "lastChecked": 1773336562674
+    "lastChecked": 1773339555987
   },
   "water/water-s-sw.png": {
     "exists": true,
-    "lastChecked": 1773336563039
+    "lastChecked": 1773339555987
   },
   "water/water-sw-nw.png": {
     "exists": true,
-    "lastChecked": 1773336563281
+    "lastChecked": 1773339555988
   },
   "water/water-nw-n.png": {
     "exists": true,
-    "lastChecked": 1773336563556
+    "lastChecked": 1773339555988
   },
   "water/water-n-ne-se.png": {
     "exists": true,
-    "lastChecked": 1773336563883
+    "lastChecked": 1773339555989
   },
   "water/water-ne-se-s.png": {
     "exists": true,
-    "lastChecked": 1773336564135
+    "lastChecked": 1773339555990
   },
   "water/water-se-s-sw.png": {
     "exists": true,
-    "lastChecked": 1773336564390
+    "lastChecked": 1773339555991
   },
   "water/water-s-sw-nw.png": {
     "exists": true,
-    "lastChecked": 1773336564758
+    "lastChecked": 1773339555991
   },
   "water/water-sw-nw-n.png": {
     "exists": true,
-    "lastChecked": 1773336565032
+    "lastChecked": 1773339555992
   },
   "water/water-nw-n-ne.png": {
     "exists": true,
-    "lastChecked": 1773336565352
+    "lastChecked": 1773339555994
   },
   "water/water-n-se.png": {
     "exists": true,
-    "lastChecked": 1773336565599
+    "lastChecked": 1773339555995
   },
   "water/water-ne-s.png": {
     "exists": true,
-    "lastChecked": 1773336565858
+    "lastChecked": 1773339555995
   },
   "water/water-se-sw.png": {
     "exists": true,
-    "lastChecked": 1773336566308
+    "lastChecked": 1773339555996
   },
   "water/water-s-nw.png": {
     "exists": true,
-    "lastChecked": 1773336566571
+    "lastChecked": 1773339555996
   },
   "water/water-sw-n.png": {
     "exists": true,
-    "lastChecked": 1773336566810
+    "lastChecked": 1773339555997
   },
   "water/water-nw-ne.png": {
     "exists": true,
-    "lastChecked": 1773336567145
+    "lastChecked": 1773339555998
   },
   "forest/forest-n-ne.png": {
     "exists": true,
-    "lastChecked": 1773336567479
+    "lastChecked": 1773339555999
   },
   "forest/forest-ne-se.png": {
     "exists": true,
-    "lastChecked": 1773336567815
+    "lastChecked": 1773339555999
   },
   "forest/forest-se-s.png": {
     "exists": true,
-    "lastChecked": 1773336568145
+    "lastChecked": 1773339556000
   },
   "forest/forest-s-sw.png": {
     "exists": true,
-    "lastChecked": 1773336568470
+    "lastChecked": 1773339556001
   },
   "forest/forest-sw-nw.png": {
     "exists": true,
-    "lastChecked": 1773336568755
+    "lastChecked": 1773339556001
   },
   "forest/forest-nw-n.png": {
     "exists": true,
-    "lastChecked": 1773336569025
+    "lastChecked": 1773339556002
   },
   "forest/forest-n-ne-se.png": {
     "exists": true,
-    "lastChecked": 1773336569929
+    "lastChecked": 1773339556003
   },
   "forest/forest-ne-se-s.png": {
     "exists": true,
-    "lastChecked": 1773336570763
+    "lastChecked": 1773339556004
   },
   "forest/forest-se-s-sw.png": {
     "exists": true,
-    "lastChecked": 1773336571049
+    "lastChecked": 1773339556004
   },
   "forest/forest-s-sw-nw.png": {
     "exists": true,
-    "lastChecked": 1773336571284
+    "lastChecked": 1773339556006
   },
   "forest/forest-sw-nw-n.png": {
     "exists": true,
-    "lastChecked": 1773336571543
+    "lastChecked": 1773339556006
   },
   "forest/forest-nw-n-ne.png": {
     "exists": true,
-    "lastChecked": 1773336571965
+    "lastChecked": 1773339556007
   },
   "forest/forest-n-se.png": {
     "exists": true,
-    "lastChecked": 1773336572215
+    "lastChecked": 1773339556008
   },
   "forest/forest-ne-s.png": {
     "exists": true,
-    "lastChecked": 1773336572598
+    "lastChecked": 1773339556008
   },
   "forest/forest-se-sw.png": {
     "exists": true,
-    "lastChecked": 1773336572854
+    "lastChecked": 1773339556009
   },
   "forest/forest-s-nw.png": {
     "exists": true,
-    "lastChecked": 1773336573194
+    "lastChecked": 1773339556010
   },
   "forest/forest-sw-n.png": {
     "exists": true,
-    "lastChecked": 1773336573464
+    "lastChecked": 1773339556010
   },
   "forest/forest-nw-ne.png": {
     "exists": true,
-    "lastChecked": 1773336573707
+    "lastChecked": 1773339556011
   },
   "sand/sand-n-ne.png": {
     "exists": true,
-    "lastChecked": 1773336573964
+    "lastChecked": 1773339556011
   },
   "sand/sand-ne-se.png": {
     "exists": true,
-    "lastChecked": 1773336574223
+    "lastChecked": 1773339556012
   },
   "sand/sand-se-s.png": {
     "exists": true,
-    "lastChecked": 1773336575871
+    "lastChecked": 1773339556013
   },
   "sand/sand-s-sw.png": {
     "exists": true,
-    "lastChecked": 1773336576157
+    "lastChecked": 1773339556013
   },
   "sand/sand-sw-nw.png": {
     "exists": true,
-    "lastChecked": 1773336576477
+    "lastChecked": 1773339556014
   },
   "sand/sand-nw-n.png": {
     "exists": true,
-    "lastChecked": 1773336576771
+    "lastChecked": 1773339556015
   },
   "sand/sand-n-ne-se.png": {
     "exists": true,
-    "lastChecked": 1773336577227
+    "lastChecked": 1773339556015
   },
   "sand/sand-ne-se-s.png": {
     "exists": true,
-    "lastChecked": 1773336577467
+    "lastChecked": 1773339556016
   },
   "sand/sand-se-s-sw.png": {
     "exists": true,
-    "lastChecked": 1773336577807
+    "lastChecked": 1773339556017
   },
   "sand/sand-s-sw-nw.png": {
     "exists": true,
-    "lastChecked": 1773336578046
+    "lastChecked": 1773339556018
   },
   "sand/sand-sw-nw-n.png": {
     "exists": true,
-    "lastChecked": 1773336578374
+    "lastChecked": 1773339556019
   },
   "sand/sand-nw-n-ne.png": {
     "exists": true,
-    "lastChecked": 1773336578645
+    "lastChecked": 1773339556020
   },
   "sand/sand-n-se.png": {
     "exists": true,
-    "lastChecked": 1773336578899
+    "lastChecked": 1773339556020
   },
   "sand/sand-ne-s.png": {
     "exists": true,
-    "lastChecked": 1773336579456
+    "lastChecked": 1773339556021
   },
   "sand/sand-se-sw.png": {
     "exists": true,
-    "lastChecked": 1773336579960
+    "lastChecked": 1773339556021
   },
   "sand/sand-s-nw.png": {
     "exists": true,
-    "lastChecked": 1773336580302
+    "lastChecked": 1773339556022
   },
   "sand/sand-sw-n.png": {
     "exists": true,
-    "lastChecked": 1773336580579
+    "lastChecked": 1773339556022
   },
   "sand/sand-nw-ne.png": {
     "exists": true,
-    "lastChecked": 1773336580897
+    "lastChecked": 1773339556023
   },
   "frozen/frozen-n-ne.png": {
     "exists": true,
-    "lastChecked": 1773336581282
+    "lastChecked": 1773339556023
   },
   "frozen/frozen-ne-se.png": {
     "exists": true,
-    "lastChecked": 1773336582713
+    "lastChecked": 1773339556024
   },
   "frozen/frozen-se-s.png": {
     "exists": true,
-    "lastChecked": 1773336583033
+    "lastChecked": 1773339556024
   },
   "frozen/frozen-s-sw.png": {
     "exists": true,
-    "lastChecked": 1773336583571
+    "lastChecked": 1773339556025
   },
   "frozen/frozen-sw-nw.png": {
     "exists": true,
-    "lastChecked": 1773336583816
+    "lastChecked": 1773339556026
   },
   "frozen/frozen-nw-n.png": {
     "exists": true,
-    "lastChecked": 1773336584069
+    "lastChecked": 1773339556027
   },
   "frozen/frozen-n-ne-se.png": {
     "exists": true,
-    "lastChecked": 1773336584437
+    "lastChecked": 1773339556028
   },
   "frozen/frozen-ne-se-s.png": {
     "exists": true,
-    "lastChecked": 1773336584802
+    "lastChecked": 1773339556029
   },
   "frozen/frozen-se-s-sw.png": {
     "exists": true,
-    "lastChecked": 1773336585146
+    "lastChecked": 1773339556029
   },
   "frozen/frozen-s-sw-nw.png": {
     "exists": true,
-    "lastChecked": 1773336585405
+    "lastChecked": 1773339556030
   },
   "frozen/frozen-sw-nw-n.png": {
     "exists": true,
-    "lastChecked": 1773336585914
+    "lastChecked": 1773339556030
   },
   "frozen/frozen-nw-n-ne.png": {
     "exists": true,
-    "lastChecked": 1773336586399
+    "lastChecked": 1773339556032
   },
   "frozen/frozen-n-se.png": {
     "exists": true,
-    "lastChecked": 1773336586724
+    "lastChecked": 1773339556033
   },
   "frozen/frozen-ne-s.png": {
     "exists": true,
-    "lastChecked": 1773336587065
+    "lastChecked": 1773339556033
   },
   "frozen/frozen-se-sw.png": {
     "exists": true,
-    "lastChecked": 1773336587403
+    "lastChecked": 1773339556034
   },
   "frozen/frozen-s-nw.png": {
     "exists": true,
-    "lastChecked": 1773336587675
+    "lastChecked": 1773339556034
   },
   "frozen/frozen-sw-n.png": {
     "exists": true,
-    "lastChecked": 1773336587910
+    "lastChecked": 1773339556034
   },
   "frozen/frozen-nw-ne.png": {
     "exists": true,
-    "lastChecked": 1773336588150
+    "lastChecked": 1773339556035
+  },
+  "water/ocean-A01.png": {
+    "exists": true,
+    "lastChecked": 1773339432449
+  },
+  "water/ocean-A02.png": {
+    "exists": true,
+    "lastChecked": 1773339432423
+  },
+  "water/ocean-A03.png": {
+    "exists": true,
+    "lastChecked": 1773339432448
+  },
+  "water/ocean-A01-n.png": {
+    "exists": true,
+    "lastChecked": 1773339432419
+  },
+  "water/ocean-A01-ne.png": {
+    "exists": true,
+    "lastChecked": 1773339432434
+  },
+  "water/ocean-A01-se.png": {
+    "exists": true,
+    "lastChecked": 1773339432426
+  },
+  "water/ocean-A01-s.png": {
+    "exists": true,
+    "lastChecked": 1773339432406
+  },
+  "water/ocean-A01-sw.png": {
+    "exists": true,
+    "lastChecked": 1773339432426
+  },
+  "water/ocean-A01-nw.png": {
+    "exists": true,
+    "lastChecked": 1773339432445
+  },
+  "water/ocean-A02-n.png": {
+    "exists": true,
+    "lastChecked": 1773339432441
+  },
+  "water/ocean-A02-ne.png": {
+    "exists": true,
+    "lastChecked": 1773339432494
+  },
+  "water/ocean-A02-se.png": {
+    "exists": true,
+    "lastChecked": 1773339432493
+  },
+  "water/ocean-A02-s.png": {
+    "exists": true,
+    "lastChecked": 1773339432446
+  },
+  "water/ocean-A02-sw.png": {
+    "exists": true,
+    "lastChecked": 1773339432495
+  },
+  "water/ocean-A02-nw.png": {
+    "exists": true,
+    "lastChecked": 1773339432441
+  },
+  "water/ocean-A03-n.png": {
+    "exists": true,
+    "lastChecked": 1773339432403
+  },
+  "water/ocean-A03-ne.png": {
+    "exists": true,
+    "lastChecked": 1773339432438
+  },
+  "water/ocean-A03-se.png": {
+    "exists": true,
+    "lastChecked": 1773339432436
+  },
+  "water/ocean-A03-s.png": {
+    "exists": true,
+    "lastChecked": 1773339432427
+  },
+  "water/ocean-A03-sw.png": {
+    "exists": true,
+    "lastChecked": 1773339432437
+  },
+  "water/ocean-A03-nw.png": {
+    "exists": true,
+    "lastChecked": 1773339432438
   }
 }

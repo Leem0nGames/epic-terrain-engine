@@ -1280,6 +1280,636 @@
         "w": 72,
         "h": 72
       }
+    },
+    "water/deep-n": {
+      "filename": "water/deep-n",
+      "frame": {
+        "x": 3838,
+        "y": 328,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/deep-ne": {
+      "filename": "water/deep-ne",
+      "frame": {
+        "x": 3912,
+        "y": 328,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/deep-nw": {
+      "filename": "water/deep-nw",
+      "frame": {
+        "x": 3986,
+        "y": 328,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/deep-s": {
+      "filename": "water/deep-s",
+      "frame": {
+        "x": 2,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/deep-se": {
+      "filename": "water/deep-se",
+      "frame": {
+        "x": 76,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/deep-sw": {
+      "filename": "water/deep-sw",
+      "frame": {
+        "x": 150,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/deep": {
+      "filename": "water/deep",
+      "frame": {
+        "x": 224,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/deep2": {
+      "filename": "water/deep2",
+      "frame": {
+        "x": 298,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A01-n": {
+      "filename": "water/ocean-A01-n",
+      "frame": {
+        "x": 372,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A01-ne": {
+      "filename": "water/ocean-A01-ne",
+      "frame": {
+        "x": 446,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A01-nw": {
+      "filename": "water/ocean-A01-nw",
+      "frame": {
+        "x": 520,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A01-s": {
+      "filename": "water/ocean-A01-s",
+      "frame": {
+        "x": 594,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A01-se": {
+      "filename": "water/ocean-A01-se",
+      "frame": {
+        "x": 668,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A01-sw": {
+      "filename": "water/ocean-A01-sw",
+      "frame": {
+        "x": 742,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A01": {
+      "filename": "water/ocean-A01",
+      "frame": {
+        "x": 816,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A02-n": {
+      "filename": "water/ocean-A02-n",
+      "frame": {
+        "x": 890,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A02-ne": {
+      "filename": "water/ocean-A02-ne",
+      "frame": {
+        "x": 964,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A02-nw": {
+      "filename": "water/ocean-A02-nw",
+      "frame": {
+        "x": 1038,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A02-s": {
+      "filename": "water/ocean-A02-s",
+      "frame": {
+        "x": 1112,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A02-se": {
+      "filename": "water/ocean-A02-se",
+      "frame": {
+        "x": 1186,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A02-sw": {
+      "filename": "water/ocean-A02-sw",
+      "frame": {
+        "x": 1260,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A02": {
+      "filename": "water/ocean-A02",
+      "frame": {
+        "x": 1334,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A03-n": {
+      "filename": "water/ocean-A03-n",
+      "frame": {
+        "x": 1408,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A03-ne": {
+      "filename": "water/ocean-A03-ne",
+      "frame": {
+        "x": 1482,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A03-nw": {
+      "filename": "water/ocean-A03-nw",
+      "frame": {
+        "x": 1556,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A03-s": {
+      "filename": "water/ocean-A03-s",
+      "frame": {
+        "x": 1630,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A03-se": {
+      "filename": "water/ocean-A03-se",
+      "frame": {
+        "x": 1704,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A03-sw": {
+      "filename": "water/ocean-A03-sw",
+      "frame": {
+        "x": 1778,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/ocean-A03": {
+      "filename": "water/ocean-A03",
+      "frame": {
+        "x": 1852,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
+    },
+    "water/wave": {
+      "filename": "water/wave",
+      "frame": {
+        "x": 1926,
+        "y": 546,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      }
     }
   },
   "meta": {
@@ -1288,8 +1918,8 @@
     "image": "terrain-atlas.webp",
     "format": "RGBA8888",
     "size": {
-      "w": 3920,
-      "h": 546
+      "w": 4060,
+      "h": 620
     },
     "scale": "1"
   }
