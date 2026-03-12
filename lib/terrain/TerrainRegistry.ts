@@ -39,6 +39,7 @@ export function getTransitionUrl(fromCode: string, toCode: string, mask: number,
   // Map direction bits to Wesnoth suffixes
   // bit 0: n, bit 1: ne, bit 2: se, bit 3: s, bit 4: sw, bit 5: nw
   const directionSuffixes = ['-n', '-ne', '-se', '-s', '-sw', '-nw'];
+  const directionNames = ['n', 'ne', 'se', 's', 'sw', 'nw'];
   
   // Find which bits are set in the mask
   const setBits: number[] = [];
@@ -57,11 +58,21 @@ export function getTransitionUrl(fromCode: string, toCode: string, mask: number,
     return `${assetBase}${folderName}${fileName}${suffix}.png`;
   }
   
-  // For multiple directions, try to find combined transition files
-  // This is simplified - in reality, Wesnoth has specific files for combinations
-  // For now, return the first direction's transition
-  const suffix = directionSuffixes[setBits[0]];
-  return `${assetBase}${folderName}${fileName}${suffix}.png`;
+  // For multiple directions, build the suffix
+  // Sort bits to ensure consistent ordering
+  setBits.sort((a, b) => a - b);
+  
+  // Build suffix from direction names
+  const suffix = setBits.map(i => directionNames[i]).join('-');
+  
+  // Try different patterns based on Wesnoth naming convention
+  const patterns = [
+    `${assetBase}${folderName}${fileName}-${suffix}.png`, // basic-n-ne.png
+    `${assetBase}${folderName}${fileName}${directionSuffixes[setBits[0]]}.png`, // fallback to first direction
+  ];
+  
+  // Return the first pattern (most specific)
+  return patterns[0];
 }
 
 export const DECORATION_REGISTRY: Record<string, { base: string[], offsetY?: number }> = {
