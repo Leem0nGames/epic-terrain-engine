@@ -97,6 +97,7 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
 
     let app: PIXI.Application | null = null;
     let cleanupFunction: (() => void) | null = null;
+    let timeoutId: NodeJS.Timeout | null = null;
 
     // Esperar a que el contenedor tenga dimensiones
     const initPixi = () => {
@@ -105,8 +106,10 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       const width = containerRef.current.clientWidth;
       const height = containerRef.current.clientHeight;
       
+      console.log('Pixi init attempt:', width, height);
+      
       if (width === 0 || height === 0) {
-        setTimeout(initPixi, 50);
+        timeoutId = setTimeout(initPixi, 100);
         return;
       }
 
@@ -124,6 +127,8 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       const canvas = app.view as unknown as Node;
       containerRef.current.appendChild(canvas);
       appRef.current = app;
+      
+      console.log('Pixi initialized:', width, height);
 
       // Contenedor principal para el mundo
       const world = new PIXI.Container();
@@ -200,6 +205,9 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
 
       // Función de cleanup
       cleanupFunction = () => {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
         window.removeEventListener('resize', handleResize);
         containerRef.current?.removeEventListener('mousedown', handleMouseDown);
         window.removeEventListener('mousemove', handleMouseMove);
