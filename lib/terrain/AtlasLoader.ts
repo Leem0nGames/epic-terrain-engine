@@ -38,17 +38,29 @@ export class AtlasLoader {
     if (this.loaded) return;
 
     try {
+      console.log('Cargando metadata del atlas...');
       // Cargar metadata
       const response = await fetch(ATLAS_METADATA_PATH);
-      this.atlasData = await response.json();
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const atlasData = await response.json();
+      this.atlasData = atlasData;
+      console.log(`✅ Metadata cargada: ${Object.keys(atlasData.frames).length} frames`);
 
-      // Cargar textura del atlas
+      console.log('Cargando textura del atlas...');
+      // Cargar textura del atlas usando PIXI.Assets
       const texture = await PIXI.Assets.load(ATLAS_PATH);
+      if (!texture) {
+        throw new Error('Failed to load atlas texture');
+      }
       this.atlasTexture = texture;
+      console.log(`✅ Textura cargada: ${texture.width}x${texture.height}`);
 
       this.loaded = true;
-      if (this.atlasData) {
-        console.log(`✅ Atlas cargado: ${this.atlasData.meta.size.w}x${this.atlasData.meta.size.h}`);
+      if (atlasData && this.atlasTexture) {
+        console.log(`✅ Atlas completo cargado: ${atlasData.meta.size.w}x${atlasData.meta.size.h}`);
+        console.log('Primeros 5 sprites:', Object.keys(atlasData.frames).slice(0, 5));
       }
     } catch (error) {
       console.error('❌ Error cargando atlas:', error);
@@ -64,19 +76,32 @@ export class AtlasLoader {
     const atlasData = this.atlasData;
     
     if (!atlasTexture || !atlasData) {
+      console.warn(`⚠️  Atlas no cargado cuando se solicita: ${spriteName}`);
       return null;
     }
 
     const frame = atlasData.frames[spriteName];
     if (!frame) {
       console.warn(`⚠️  Sprite no encontrado en atlas: ${spriteName}`);
+      console.log('Sprites disponibles:', Object.keys(atlasData.frames).slice(0, 10));
       return null;
     }
 
-    // En Pixi.js 7, se usa PIXI.Texture.from() con el marco del atlas
-    // La textura del atlas ya está cargada, solo necesitamos referenciar la región
-    const region = new PIXI.Rectangle(frame.frame.x, frame.frame.y, frame.frame.w, frame.frame.h);
-    return new PIXI.Texture(atlasTexture.baseTexture!, region);
+    // Crear textura a partir de la región del atlas
+    try {
+      const region = new PIXI.Rectangle(frame.frame.x, frame.frame.y, frame.frame.w, frame.frame.h);
+      const texture = new PIXI.Texture(atlasTexture.baseTexture!, region);
+      
+      if (!texture.baseTexture) {
+        console.warn(`⚠️  Textura creada sin baseTexture: ${spriteName}`);
+        return null;
+      }
+      
+      return texture;
+    } catch (error) {
+      console.error(`❌ Error creando textura para ${spriteName}:`, error);
+      return null;
+    }
   }
 
   /**
