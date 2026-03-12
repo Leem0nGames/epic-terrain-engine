@@ -10,13 +10,34 @@ import { WMLRuleConverter } from '../lib/wml/WMLRuleConverter';
 import { FlowField, FlowFieldResult } from '../lib/terrain/FlowField';
 import { TextureAtlas } from '../lib/terrain/TextureAtlas';
 import { UnitInstance, UNIT_REGISTRY } from '../lib/units/UnitRegistry';
+import { MacroWML } from '../lib/terrain/MacroWML';
+import { TextureCache } from '../lib/terrain/TextureCache';
+import { LazyAssetLoader } from '../lib/terrain/LazyAssetLoader';
 
 export async function loadImage(url: string) {
+  // Solicitar carga con lazy loading
+  LazyAssetLoader.requestAsset(url, 1);
+
   return new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = "anonymous";
 
-    img.onload = () => resolve(img);
+    img.onload = () => {
+      // Almacenar en caché de texturas si es posible
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
+          TextureCache.set(url, canvas);
+        }
+      } catch (error) {
+        // Ignorar errores de caché
+      }
+      resolve(img);
+    };
     img.onerror = () => reject(url);
 
     img.src = url;
