@@ -26,6 +26,8 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
   const worldRef = useRef<PIXI.Container | null>(null);
   const chunksRef = useRef<Map<string, PIXI.Container>>(new Map());
   const [camera, setCamera] = useState<CameraState>({ x: 0, y: 0, zoom: 1 });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const isDraggingRef = useRef(false);
   const lastMouseRef = useRef({ x: 0, y: 0 });
 
@@ -93,6 +95,9 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
   useEffect(() => {
     if (!containerRef.current) return;
 
+    let app: PIXI.Application | null = null;
+    let cleanupFunction: (() => void) | null = null;
+
     // Esperar a que el contenedor tenga dimensiones
     const initPixi = () => {
       if (!containerRef.current) return;
@@ -106,7 +111,7 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       }
 
       // Inicializar Pixi.js Application
-      const app = new PIXI.Application({
+      app = new PIXI.Application({
         width,
         height,
         backgroundColor: 0x1a1a2e, // Color de fondo oscuro
@@ -127,16 +132,19 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
 
       // Cargar atlas si no está cargado
       async function loadAtlas() {
-        if (!AtlasLoader.isLoaded()) {
-          try {
+        try {
+          if (!AtlasLoader.isLoaded()) {
             await AtlasLoader.load();
-          } catch (error) {
-            console.error('Error cargando atlas:', error);
           }
+          
+          // Generar chunks una vez cargado el atlas
+          generateChunks(world, grid, size);
+          setIsLoading(false);
+        } catch (err) {
+          console.error('Error cargando atlas:', err);
+          setError('Error loading terrain assets');
+          setIsLoading(false);
         }
-        
-        // Generar chunks una vez cargado el atlas
-        generateChunks(world, grid, size);
       }
 
       loadAtlas();
@@ -181,8 +189,8 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
 
       // Manejar resize
       const handleResize = () => {
-        if (!containerRef.current || !appRef.current) return;
-        appRef.current.renderer.resize(
+        if (!containerRef.current || !app) return;
+        app.renderer.resize(
           containerRef.current.clientWidth,
           containerRef.current.clientHeight
         );
@@ -190,8 +198,8 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
 
       window.addEventListener('resize', handleResize);
 
-      // Limpiar al desmontar
-      return () => {
+      // Función de cleanup
+      cleanupFunction = () => {
         window.removeEventListener('resize', handleResize);
         containerRef.current?.removeEventListener('mousedown', handleMouseDown);
         window.removeEventListener('mousemove', handleMouseMove);
@@ -201,14 +209,21 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
         if (worldRef.current) {
           worldRef.current.destroy();
         }
-        app.destroy(true, { children: true, texture: true, baseTexture: true });
+        if (app) {
+          app.destroy(true, { children: true, texture: true, baseTexture: true });
+        }
       };
     };
 
     // Inicializar Pixi
-    const cleanup = initPixi();
+    initPixi();
     
-    return cleanup;
+    // Retornar cleanup function
+    return () => {
+      if (cleanupFunction) {
+        cleanupFunction();
+      }
+    };
   }, [grid, size]);
 
   return (
@@ -219,8 +234,21 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
         height: '100%',
         overflow: 'hidden',
         borderRadius: '1rem',
-        cursor: 'grab'
+        cursor: 'grab',
+        backgroundColor: '#0f172a', // Fondo visible para debug
+        position: 'relative'
       }} 
-    />
+    >
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-900/80">
+          <div className="text-slate-400">Loading terrain...</div>
+        </div>
+      )}
+      {error && (
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-900/80">
+          <div className="text-red-400">{error}</div>
+        </div>
+      )}
+    </div>
   );
 }

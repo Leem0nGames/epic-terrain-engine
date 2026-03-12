@@ -201,7 +201,7 @@ export default function Page() {
 
         {/* Main Map Area */}
         <div className="flex-1 relative">
-          <div className="absolute inset-0 bg-slate-950">
+          <div className="absolute inset-0 bg-slate-950 z-0">
             <PixiHexGridRenderer 
               grid={grid} 
               size={30} 
