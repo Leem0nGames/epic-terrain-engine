@@ -57,45 +57,7 @@ export class WMLRuleConverter {
   }
 
   static async loadWesnothRules(): Promise<MacroTerrainRule[]> {
-    const CACHE_KEY = 'wesnoth_terrain_rules';
-    const cached = localStorage.getItem(CACHE_KEY);
-    if (cached) {
-      try {
-        return JSON.parse(cached);
-      } catch (e) {
-        console.error('Failed to parse cached rules', e);
-      }
-    }
-
-    try {
-      // Fetch terrain-graphics.cfg from CDN
-      const url = 'https://cdn.jsdelivr.net/gh/wesnoth/wesnoth@1.18.0/data/core/terrain-graphics.cfg';
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`Failed to fetch WML: ${response.statusText}`);
-      
-      const text = await response.text();
-      const rootNode = WMLParser.parse(text);
-      
-      const rules: MacroTerrainRule[] = [];
-      
-      // Find all [terrain_graphics] nodes
-      const findGraphicsNodes = (node: WMLNode) => {
-        if (node.tag === 'terrain_graphics') {
-          const rule = WMLRuleConverter.convertTerrainGraphics(node);
-          if (rule) rules.push(rule);
-        }
-        node.children.forEach(findGraphicsNodes);
-      };
-      
-      findGraphicsNodes(rootNode);
-      
-      // Cache the result
-      localStorage.setItem(CACHE_KEY, JSON.stringify(rules));
-      
-      return rules;
-    } catch (error) {
-      console.error('Error loading Wesnoth rules:', error);
-      return [];
-    }
+    // We are using hardcoded macro rules instead of loading from WML
+    return [];
   }
 }

@@ -18,12 +18,12 @@ export interface UnitInstance {
   faction: number; // 0 for player, 1 for enemy
 }
 
-// Using placeholder URLs for now, but these represent typical Wesnoth unit sprites
+// Using local asset paths for unit sprites
 export const UNIT_REGISTRY: Record<string, UnitType> = {
   'elvish-fighter': {
     id: 'elvish-fighter',
     name: 'Elvish Fighter',
-    sprite: 'https://raw.githubusercontent.com/wesnoth/wesnoth/master/data/core/images/units/elves-wood/fighter.png',
+    sprite: '/assets/units/elves-wood/fighter.png',
     maxHp: 33,
     maxMovement: 5,
     alignment: 'neutral',
@@ -35,7 +35,7 @@ export const UNIT_REGISTRY: Record<string, UnitType> = {
   'orcish-grunt': {
     id: 'orcish-grunt',
     name: 'Orcish Grunt',
-    sprite: 'https://raw.githubusercontent.com/wesnoth/wesnoth/master/data/core/images/units/orcs/grunt.png',
+    sprite: '/assets/units/orcs/grunt.png',
     maxHp: 38,
     maxMovement: 5,
     alignment: 'chaotic',

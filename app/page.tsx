@@ -260,16 +260,16 @@ export default function Page() {
               </div>
             </div>
 
-            <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6">
-              <h2 className="text-xl font-semibold mb-4">Features</h2>
-              <ul className="space-y-2 text-sm text-slate-400 list-disc list-inside">
-                <li>Procedural Biomes (Noise)</li>
-                <li>Terrain Clustering</li>
-                <li>Overlapping Sprites</li>
-                <li>Z-Index Autotiling</li>
-                <li>Macro Rules (WML)</li>
-              </ul>
-            </div>
+             <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6">
+               <h2 className="text-xl font-semibold mb-4">Features</h2>
+               <ul className="space-y-2 text-sm text-slate-400 list-disc list-inside">
+                 <li>Procedural Biomes (Noise)</li>
+                 <li>Terrain Clustering</li>
+                 <li>Overlapping Sprites</li>
+                 <li>Z-Index Autotiling</li>
+                 <li>Macro Rules (Hardcoded)</li>
+               </ul>
+             </div>
 
             <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6">
               <h2 className="text-xl font-semibold mb-4">Debug Legend</h2>
