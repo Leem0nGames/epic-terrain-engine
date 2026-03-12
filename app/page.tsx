@@ -2,8 +2,9 @@
 
 import React, { useState, useMemo } from 'react';
 import { TERRAIN_REGISTRY } from '../lib/terrain/TerrainRegistry';
-import { HexGridRenderer } from '../components/HexGridRenderer';
 import { PixiHexGridRenderer } from '../components/PixiHexGridRenderer';
+import { GameActionBar } from '../components/GameActionBar';
+import { UnitPanel } from '../components/UnitPanel';
 import { MapGenerator } from '../lib/terrain/MapGenerator';
 import { TectonicMapGenerator } from '../lib/terrain/TectonicMapGenerator';
 import { TerrainResolver } from '../lib/terrain/TerrainResolver';
@@ -130,161 +131,169 @@ export default function Page() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-50 p-8 font-sans">
-      <div className="max-w-6xl mx-auto">
-        <header className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold tracking-tight mb-2">Wesnoth-style Terrain Engine</h1>
-            <p className="text-slate-400">Procedural Biome Generation with Autotiling.</p>
+    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-50 font-sans overflow-hidden">
+      {/* Header Bar */}
+      <header className="bg-slate-900/80 backdrop-blur-sm border-b border-slate-800 px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/25">
+            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
           </div>
-           <div className="flex gap-4">
-             <button 
-               onClick={() => setDebug(!debug)}
-               className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors"
-             >
-               {debug ? 'Hide Debug' : 'Show Debug'}
-             </button>
-             <button 
-               onClick={() => setUseTectonic(!useTectonic)}
-               className={`px-4 py-2 ${useTectonic ? 'bg-purple-600 hover:bg-purple-500' : 'bg-blue-600 hover:bg-blue-500'} rounded-lg text-sm font-medium transition-colors`}
-             >
-               {useTectonic ? 'Noise Map' : 'Tectonic Map'}
-             </button>
-             <button 
-               onClick={endTurn}
-               className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-sm font-medium transition-colors"
-             >
-               End Turn
-             </button>
-             <button 
-               onClick={() => setSeed(Math.floor(Math.random() * 10000))}
-               className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-medium transition-colors"
-             >
-               Generate New Map
-             </button>
-           </div>
-        </header>
+          <div>
+            <h1 className="text-xl font-bold tracking-tight">Epic Terrain Engine</h1>
+            <p className="text-xs text-slate-400">Procedural Strategy Game</p>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <div className="lg:col-span-3 aspect-square lg:aspect-video bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl">
-             <PixiHexGridRenderer 
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 bg-slate-800/50 rounded-lg px-3 py-1.5">
+            <span className="text-xs text-slate-400">Turn:</span>
+            <span className="text-sm font-mono text-white">1</span>
+          </div>
+          <div className="flex items-center gap-2 bg-slate-800/50 rounded-lg px-3 py-1.5">
+            <span className="text-xs text-slate-400">Gold:</span>
+            <span className="text-sm font-mono text-yellow-400">100</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => setSeed(Math.floor(Math.random() * 10000))}
+            className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-medium transition-colors flex items-center gap-2 shadow-lg shadow-indigo-500/25"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            New Map
+          </button>
+          <button 
+            onClick={() => setUseTectonic(!useTectonic)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-2 ${
+              useTectonic 
+                ? 'bg-purple-600 hover:bg-purple-500 shadow-lg shadow-purple-500/25' 
+                : 'bg-slate-700 hover:bg-slate-600'
+            }`}
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
+            </svg>
+            {useTectonic ? 'Tectonic' : 'Noise'}
+          </button>
+          <button 
+            onClick={() => setDebug(!debug)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              debug 
+                ? 'bg-red-600 hover:bg-red-500' 
+                : 'bg-slate-700 hover:bg-slate-600'
+            }`}
+          >
+            Debug
+          </button>
+        </div>
+      </header>
+
+      <div className="flex h-[calc(100vh-61px)]">
+        {/* Left Sidebar - Unit Info */}
+        <aside className="w-64 bg-slate-900/50 backdrop-blur-sm border-r border-slate-800 p-4 overflow-y-auto">
+          <UnitPanel unit={selectedUnit} />
+        </aside>
+
+        {/* Main Map Area */}
+        <div className="flex-1 relative">
+          <div className="absolute inset-0 bg-slate-950">
+            <PixiHexGridRenderer 
               grid={grid} 
               size={30} 
               debug={debug} 
             />
           </div>
-
-          <div className="space-y-6">
-            {selectedUnit ? (
-              <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 bg-slate-800 rounded-lg flex items-center justify-center border border-slate-700 overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img 
-                      src={UNIT_REGISTRY[selectedUnit.typeId].sprite} 
-                      alt={UNIT_REGISTRY[selectedUnit.typeId].name}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-slate-100">{UNIT_REGISTRY[selectedUnit.typeId].name}</h2>
-                    <p className="text-sm text-slate-400 capitalize">{UNIT_REGISTRY[selectedUnit.typeId].alignment} • Faction {selectedUnit.faction + 1}</p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="text-slate-400">HP</span>
-                      <span className="font-mono text-slate-200">{selectedUnit.hp} / {UNIT_REGISTRY[selectedUnit.typeId].maxHp}</span>
-                    </div>
-                    <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full rounded-full ${selectedUnit.hp / UNIT_REGISTRY[selectedUnit.typeId].maxHp > 0.5 ? 'bg-emerald-500' : 'bg-red-500'}`}
-                        style={{ width: `${(selectedUnit.hp / UNIT_REGISTRY[selectedUnit.typeId].maxHp) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="text-slate-400">Movement</span>
-                      <span className="font-mono text-slate-200">{selectedUnit.movementLeft} / {UNIT_REGISTRY[selectedUnit.typeId].maxMovement}</span>
-                    </div>
-                    <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-blue-500 rounded-full"
-                        style={{ width: `${(selectedUnit.movementLeft / UNIT_REGISTRY[selectedUnit.typeId].maxMovement) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t border-slate-800">
-                    <h3 className="text-sm font-medium text-slate-400 mb-3">Attacks</h3>
-                    <div className="space-y-2">
-                      {UNIT_REGISTRY[selectedUnit.typeId].attacks.map((attack, i) => (
-                        <div key={i} className="flex justify-between items-center bg-slate-800/50 p-2 rounded border border-slate-700/50">
-                          <span className="text-sm capitalize text-slate-300">{attack.name}</span>
-                          <span className="font-mono text-sm text-slate-400">
-                            <span className="text-slate-200">{attack.damage}</span><span className="text-slate-500">x</span><span className="text-slate-200">{attack.strikes}</span>
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="bg-slate-900/50 rounded-2xl border border-slate-800/50 p-6 shadow-xl flex flex-col items-center justify-center text-center h-48">
-                <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mb-3">
-                  <svg className="w-6 h-6 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
-                  </svg>
-                </div>
-                <p className="text-slate-400 text-sm">Select a unit to view details</p>
-              </div>
-            )}
-
-            <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6">
-              <h2 className="text-xl font-semibold mb-4">Terrain Registry</h2>
-              <div className="space-y-3">
-                {Object.values(TERRAIN_REGISTRY).map(t => (
-                  <div key={t.id} className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-md shadow-sm" style={{ backgroundColor: t.color }} />
-                    <div className="flex-1">
-                      <div className="font-medium text-sm">{t.name}</div>
-                      <div className="text-xs text-slate-500">Z-Index: {t.zIndex} {t.isOverlay && '(Overlay)'}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          
+          {/* Mini-map overlay */}
+          <div className="absolute bottom-20 left-4 w-36 h-28 bg-slate-900/80 backdrop-blur-sm rounded-lg border border-slate-700 overflow-hidden shadow-xl">
+            <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+              <span className="text-xs text-slate-500">Mini-map</span>
             </div>
+          </div>
 
-             <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6">
-               <h2 className="text-xl font-semibold mb-4">Features</h2>
-               <ul className="space-y-2 text-sm text-slate-400 list-disc list-inside">
-                 <li>Procedural Biomes (Noise)</li>
-                 <li>Terrain Clustering</li>
-                 <li>Overlapping Sprites</li>
-                 <li>Z-Index Autotiling</li>
-                 <li>Macro Rules (Hardcoded)</li>
-               </ul>
-             </div>
+          {/* Action Bar */}
+          <GameActionBar 
+            onEndTurn={endTurn}
+            onNewMap={() => setSeed(Math.floor(Math.random() * 10000))}
+            onToggleTectonic={() => setUseTectonic(!useTectonic)}
+            useTectonic={useTectonic}
+            onToggleDebug={() => setDebug(!debug)}
+            debug={debug}
+          />
+        </div>
 
-            <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6">
-              <h2 className="text-xl font-semibold mb-4">Debug Legend</h2>
-              <div className="space-y-3 text-sm text-slate-400">
-                <p><strong>0,0</strong>: Axial Coordinates (q, r)</p>
-                <p><strong>Gg (v0)</strong>: Terrain Code & Variation</p>
-                <div className="mt-2 pt-2 border-t border-slate-800">
-                  <p className="mb-1 font-medium text-slate-300">Transition Masks:</p>
-                  <p><span className="text-[#86efac]">Ww: 000011 ✓</span><br/>Exact mask found in atlas.</p>
-                  <p className="mt-1"><span className="text-[#fca5a5]">Re: 001000 → 000000</span><br/>Fallback mask selected (simulated atlas).</p>
-                </div>
+        {/* Right Sidebar - Minimap & Info */}
+        <aside className="w-56 bg-slate-900/50 backdrop-blur-sm border-l border-slate-800 p-4 overflow-y-auto">
+          {/* Minimap */}
+          <div className="mb-6">
+            <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Minimap</h3>
+            <div className="w-full aspect-video bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
+              <div className="w-full h-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center">
+                <span className="text-xs text-slate-500">Terrain Overview</span>
               </div>
             </div>
           </div>
-        </div>
+
+          {/* Terrain Legend */}
+          <div className="mb-6">
+            <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Terrain Types</h3>
+            <div className="space-y-1.5">
+              {Object.values(TERRAIN_REGISTRY).slice(0, 8).map(t => (
+                <div key={t.id} className="flex items-center gap-2 p-1.5 rounded hover:bg-slate-800/50 transition-colors">
+                  <div className="w-4 h-4 rounded shadow-sm" style={{ backgroundColor: t.color }} />
+                  <div className="flex-1">
+                    <div className="text-xs text-slate-300">{t.name}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Game Stats */}
+          <div className="mb-6">
+            <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Game Stats</h3>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <span className="text-xs text-slate-300">Player 1</span>
+                </div>
+                <span className="text-xs font-mono text-white">1 unit</span>
+              </div>
+              <div className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                  <span className="text-xs text-slate-300">Player 2</span>
+                </div>
+                <span className="text-xs font-mono text-white">1 unit</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Legend */}
+          <div>
+            <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Controls</h3>
+            <div className="space-y-1.5 text-xs text-slate-500">
+              <div className="flex items-center justify-between">
+                <span>Camera</span>
+                <span className="font-mono text-slate-400">Drag / WASD</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Zoom</span>
+                <span className="font-mono text-slate-400">Scroll</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Select</span>
+                <span className="font-mono text-slate-400">Click</span>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
     </main>
   );

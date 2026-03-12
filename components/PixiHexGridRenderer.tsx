@@ -29,6 +29,67 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
   const isDraggingRef = useRef(false);
   const lastMouseRef = useRef({ x: 0, y: 0 });
 
+  // Función para crear un sprite de hexágono (definida antes de generateChunks)
+  const createHexSprite = (hex: HexCell, hexSize: number): PIXI.Sprite | null => {
+    // Obtener nombre del sprite basado en el terreno
+    const terrainDef = TERRAIN_REGISTRY[hex.terrainCode];
+    if (!terrainDef || terrainDef.base.length === 0) return null;
+
+    // Usar la primera variación para ahora
+    const spriteName = terrainDef.base[0].replace('/assets/terrain/', '').replace('.png', '');
+    
+    const texture = AtlasLoader.getTexture(spriteName);
+    if (!texture) return null;
+
+    const sprite = new PIXI.Sprite(texture);
+    
+    // Posicionar el sprite
+    const { x, y } = HexGrid.hexToPixel(hex.q, hex.r, hexSize);
+    sprite.x = x;
+    sprite.y = y;
+    
+    // Ajustar tamaño y pivot para centrar
+    sprite.anchor.set(0.5);
+    const scale = hexSize / Math.max(sprite.texture.width, sprite.texture.height) * 1.8;
+    sprite.scale.set(scale);
+    
+    return sprite;
+  };
+
+  // Función para generar chunks (definida antes de initPixi)
+  const generateChunks = (world: PIXI.Container, grid: HexGrid, hexSize: number) => {
+    console.log('Generando chunks...');
+    
+    // Limpiar chunks anteriores
+    chunksRef.current.forEach(chunk => chunk.destroy());
+    chunksRef.current.clear();
+
+    const chunks = new Map<string, PIXI.Container>();
+    
+    grid.values().forEach(hex => {
+      const cq = Math.floor(hex.q / CHUNK_SIZE);
+      const cr = Math.floor(hex.r / CHUNK_SIZE);
+      const key = `${cq},${cr}`;
+      
+      if (!chunks.has(key)) {
+        const chunkContainer = new PIXI.Container();
+        chunks.set(key, chunkContainer);
+        world.addChild(chunkContainer);
+      }
+      
+      const chunk = chunks.get(key)!;
+      
+      // Crear sprite para el hexágono
+      const sprite = createHexSprite(hex, hexSize);
+      if (sprite) {
+        chunk.addChild(sprite);
+      }
+    });
+
+    chunksRef.current = chunks;
+    console.log(`Generados ${chunks.size} chunks`);
+  };
+
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -149,72 +210,6 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
     
     return cleanup;
   }, [grid, size]);
-
-  /**
-   * Generar chunks para el mapa
-   */
-  const generateChunks = (world: PIXI.Container, grid: HexGrid, hexSize: number) => {
-    console.log('Generando chunks...');
-    
-    // Limpiar chunks anteriores
-    chunksRef.current.forEach(chunk => chunk.destroy());
-    chunksRef.current.clear();
-
-    const chunks = new Map<string, PIXI.Container>();
-    
-    grid.values().forEach(hex => {
-      const cq = Math.floor(hex.q / CHUNK_SIZE);
-      const cr = Math.floor(hex.r / CHUNK_SIZE);
-      const key = `${cq},${cr}`;
-      
-      if (!chunks.has(key)) {
-        const chunkContainer = new PIXI.Container();
-        chunks.set(key, chunkContainer);
-        world.addChild(chunkContainer);
-      }
-      
-      const chunk = chunks.get(key)!;
-      
-      // Crear sprite para el hexágono
-      const sprite = createHexSprite(hex, hexSize);
-      if (sprite) {
-        chunk.addChild(sprite);
-      }
-    });
-
-    chunksRef.current = chunks;
-    console.log(`Generados ${chunks.size} chunks`);
-  };
-
-  /**
-   * Crear un sprite para un hexágono usando el atlas
-   */
-  const createHexSprite = (hex: HexCell, hexSize: number): PIXI.Sprite | null => {
-    // Obtener nombre del sprite basado en el terreno
-    // Nota: Esto es simplificado. En producción, usaríamos las reglas WML para determinar el sprite
-    const terrainDef = TERRAIN_REGISTRY[hex.terrainCode];
-    if (!terrainDef || terrainDef.base.length === 0) return null;
-
-    // Usar la primera variación para ahora (mejorar con reglas WML)
-    const spriteName = terrainDef.base[0].replace('/assets/terrain/', '').replace('.png', '');
-    
-    const texture = AtlasLoader.getTexture(spriteName);
-    if (!texture) return null;
-
-    const sprite = new PIXI.Sprite(texture);
-    
-    // Posicionar el sprite
-    const { x, y } = HexGrid.hexToPixel(hex.q, hex.r, hexSize);
-    sprite.x = x;
-    sprite.y = y;
-    
-    // Ajustar tamaño y pivot para centrar
-    sprite.anchor.set(0.5);
-    const scale = hexSize / Math.max(sprite.texture.width, sprite.texture.height) * 1.8;
-    sprite.scale.set(scale);
-    
-    return sprite;
-  };
 
   return (
     <div 
