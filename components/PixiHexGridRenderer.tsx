@@ -32,36 +32,36 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
   const lastMouseRef = useRef({ x: 0, y: 0 });
 
   // Función para crear un sprite de hexágono (definida antes de generateChunks)
-  const createHexSprite = (hex: HexCell, hexSize: number): PIXI.Sprite | null => {
-    // Obtener nombre del sprite basado en el terreno
+  const createHexSprite = (hex: HexCell, hexSize: number): PIXI.Graphics | null => {
+    // Obtener definición del terreno
     const terrainDef = TERRAIN_REGISTRY[hex.terrainCode];
-    if (!terrainDef || terrainDef.base.length === 0) {
+    if (!terrainDef) {
       console.log(`No terrain definition for: ${hex.terrainCode}`);
       return null;
     }
 
-    // Usar la primera variación para ahora
-    const spriteName = terrainDef.base[0].replace('/assets/terrain/', '').replace('.png', '');
+    // Crear un hexágono de color sólido en lugar de sprite
+    const graphics = new PIXI.Graphics();
     
-    const texture = AtlasLoader.getTexture(spriteName);
-    if (!texture) {
-      console.log(`No texture for sprite: ${spriteName}`);
-      return null;
-    }
-
-    const sprite = new PIXI.Sprite(texture);
-    
-    // Posicionar el sprite
+    // Calcular posición
     const { x, y } = HexGrid.hexToPixel(hex.q, hex.r, hexSize);
-    sprite.x = x;
-    sprite.y = y;
     
-    // Ajustar tamaño y pivot para centrar
-    sprite.anchor.set(0.5);
-    const scale = hexSize / Math.max(sprite.texture.width, sprite.texture.height) * 1.8;
-    sprite.scale.set(scale);
+    // Dibujar hexágono
+    graphics.beginFill(terrainDef.color.replace('#', '0x'));
+    graphics.drawPolygon([
+      0, -hexSize,
+      hexSize * 0.866, -hexSize * 0.5,
+      hexSize * 0.866, hexSize * 0.5,
+      0, hexSize,
+      -hexSize * 0.866, hexSize * 0.5,
+      -hexSize * 0.866, -hexSize * 0.5
+    ]);
+    graphics.endFill();
     
-    return sprite;
+    graphics.x = x;
+    graphics.y = y;
+    
+    return graphics;
   };
 
   // Función para generar chunks (definida antes de initPixi)
@@ -87,10 +87,10 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       
       const chunk = chunks.get(key)!;
       
-      // Crear sprite para el hexágono
-      const sprite = createHexSprite(hex, hexSize);
-      if (sprite) {
-        chunk.addChild(sprite);
+      // Crear gráfico para el hexágono
+      const graphics = createHexSprite(hex, hexSize);
+      if (graphics) {
+        chunk.addChild(graphics);
       }
     });
 
