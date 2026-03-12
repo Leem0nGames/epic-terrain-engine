@@ -144,10 +144,16 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       app.stage.addChild(world);
       worldRef.current = world;
       
-      // Centrar la cámara inicialmente
-      world.x = width / 2;
-      world.y = height / 2;
-      console.log('Camera centered at:', world.x, world.y);
+      // Centrar la cámara inicialmente en el medio del mapa
+      // Calcular el centro del mapa basado en las dimensiones de la grid
+      const gridWidth = 30 * size * 1.5; // Aproximación del ancho del mapa
+      const gridHeight = 20 * size * 1.732; // Aproximación de la altura del mapa
+      
+      world.x = width / 2 - gridWidth / 4; // Ajuste fino
+      world.y = height / 2 - gridHeight / 4; // Ajuste fino
+      world.scale.set(0.5); // Zoom inicial más cercano
+      
+      console.log('Camera initialized:', { width, height, worldX: world.x, worldY: world.y, scale: world.scale.x });
 
       // Cargar atlas si no está cargado
       async function loadAtlas() {
