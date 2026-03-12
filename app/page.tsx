@@ -12,7 +12,7 @@ import { HexGrid, HexCell } from '../lib/hex/HexGrid';
 import { UnitInstance, UNIT_REGISTRY } from '../lib/units/UnitRegistry';
 
 export default function Page() {
-  const [seed, setSeed] = useState(Math.floor(Math.random() * 10000));
+  const [seed, setSeed] = useState(() => Math.floor(Math.random() * 10000));
   const [debug, setDebug] = useState(false);
   const [useTectonic, setUseTectonic] = useState(false);
   const [units, setUnits] = useState<UnitInstance[]>([]);
@@ -36,7 +36,12 @@ export default function Page() {
     TransitionResolver.resolve(grid);
     OverlayResolver.resolve(grid);
     
-    // Spawn some initial units
+    return { grid };
+  }, [seed, useTectonic]);
+
+  // Generate units separately from the map
+  React.useEffect(() => {
+    const grid = mapData.grid;
     const initialUnits: UnitInstance[] = [];
     let playerSpawned = false;
     let enemySpawned = false;
@@ -72,9 +77,7 @@ export default function Page() {
     }
 
     setUnits(initialUnits);
-
-    return { grid };
-  }, [seed, useTectonic]);
+  }, [mapData]);
 
   const { grid } = mapData;
 
