@@ -111,10 +111,13 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
       });
 
       grid.values().forEach(hex => {
-        hex.transitionMasks.forEach((mask, targetTerrain) => {
-          const url = getTransitionUrl(hex.terrainCode, targetTerrain, hex.variation);
-          if (url) urls.add(url);
-        });
+        const fromDef = TERRAIN_REGISTRY[hex.terrainCode];
+        if (fromDef && fromDef.transitions) {
+          hex.transitionMasks.forEach((mask, targetTerrain) => {
+            const url = getTransitionUrl(hex.terrainCode, targetTerrain, mask, hex.variation);
+            if (url) urls.add(url);
+          });
+        }
       });
 
       macroMatches.forEach(matches => {

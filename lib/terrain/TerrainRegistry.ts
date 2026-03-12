@@ -18,10 +18,13 @@ export interface TerrainDef {
   movementCost?: number;
 }
 
-export function getTransitionUrl(fromCode: string, toCode: string, variation: number = 0): string | null {
+export function getTransitionUrl(fromCode: string, toCode: string, mask: number, variation: number = 0): string | null {
   const fromDef = TERRAIN_REGISTRY[fromCode];
   const toDef = TERRAIN_REGISTRY[toCode];
   if (!fromDef || !toDef || !fromDef.base || fromDef.base.length === 0) return null;
+  
+  // Check if transitions are enabled for both terrains
+  if (!fromDef.transitions || !toDef.transitions) return null;
 
   const baseUrl = fromDef.base[variation % fromDef.base.length];
   const assetBase = getAssetBase();
@@ -33,7 +36,32 @@ export function getTransitionUrl(fromCode: string, toCode: string, variation: nu
   const fileName = parts.pop()?.replace('.png', '') || '';
   const folderName = parts.length > 0 ? parts.join('/') + '/' : '';
   
-  return `${assetBase}${folderName}${fileName}-to-${toDef.id}-n.png`;
+  // Map direction bits to Wesnoth suffixes
+  // bit 0: n, bit 1: ne, bit 2: se, bit 3: s, bit 4: sw, bit 5: nw
+  const directionSuffixes = ['-n', '-ne', '-se', '-s', '-sw', '-nw'];
+  
+  // Find which bits are set in the mask
+  const setBits: number[] = [];
+  for (let i = 0; i < 6; i++) {
+    if (mask & (1 << i)) {
+      setBits.push(i);
+    }
+  }
+  
+  // If no bits set, return null
+  if (setBits.length === 0) return null;
+  
+  // For single direction transitions, use the suffix
+  if (setBits.length === 1) {
+    const suffix = directionSuffixes[setBits[0]];
+    return `${assetBase}${folderName}${fileName}${suffix}.png`;
+  }
+  
+  // For multiple directions, try to find combined transition files
+  // This is simplified - in reality, Wesnoth has specific files for combinations
+  // For now, return the first direction's transition
+  const suffix = directionSuffixes[setBits[0]];
+  return `${assetBase}${folderName}${fileName}${suffix}.png`;
 }
 
 export const DECORATION_REGISTRY: Record<string, { base: string[], offsetY?: number }> = {
@@ -94,7 +122,7 @@ export const TERRAIN_REGISTRY: Record<string, TerrainDef> = {
     name: "Grass",
     color: "#22c55e",
     base: [
-      `${getAssetBase()}grass/green1.png`,
+      `${getAssetBase()}grass/green.png`,
       `${getAssetBase()}grass/green2.png`,
       `${getAssetBase()}grass/green3.png`,
       `${getAssetBase()}grass/green4.png`
@@ -109,11 +137,12 @@ export const TERRAIN_REGISTRY: Record<string, TerrainDef> = {
     name: "Water",
     color: "#3b82f6",
     base: [
-      `${getAssetBase()}water/ocean01.png`,
-      `${getAssetBase()}water/ocean02.png`,
-      `${getAssetBase()}water/ocean03.png`
+      `${getAssetBase()}water/deep.png`,
+      `${getAssetBase()}water/deep2.png`,
+      `${getAssetBase()}water/wave.png`,
+      `${getAssetBase()}water/wave2.png`
     ],
-    variations: 3,
+    variations: 4,
     transitions: true,
     zIndex: 0,
     movementCost: 99
@@ -135,9 +164,10 @@ export const TERRAIN_REGISTRY: Record<string, TerrainDef> = {
     name: "Desert",
     color: "#fcd34d",
     base: [
-      `${getAssetBase()}sand/desert.png`
+      `${getAssetBase()}sand/desert.png`,
+      `${getAssetBase()}sand/dune.png`
     ],
-    variations: 1,
+    variations: 2,
     transitions: true,
     zIndex: 1,
     movementCost: 2
@@ -147,9 +177,10 @@ export const TERRAIN_REGISTRY: Record<string, TerrainDef> = {
     name: "Snow",
     color: "#f8fafc",
     base: [
-      `${getAssetBase()}frozen/snow.png`
+      `${getAssetBase()}frozen/snow.png`,
+      `${getAssetBase()}frozen/ice.png`
     ],
-    variations: 1,
+    variations: 2,
     transitions: true,
     zIndex: 1,
     movementCost: 2
@@ -159,9 +190,11 @@ export const TERRAIN_REGISTRY: Record<string, TerrainDef> = {
     name: "Hills",
     color: "#a1a1aa",
     base: [
-      `${getAssetBase()}hills/regular.png`
+      `${getAssetBase()}mountains/basic.png`,
+      `${getAssetBase()}mountains/basic2.png`,
+      `${getAssetBase()}mountains/basic3.png`
     ],
-    variations: 1,
+    variations: 3,
     transitions: true,
     zIndex: 2,
     layer: 3,
@@ -176,7 +209,7 @@ export const TERRAIN_REGISTRY: Record<string, TerrainDef> = {
       `${getAssetBase()}forest/tropical.png`
     ],
     variations: 1,
-    transitions: true,
+    transitions: false,
     isOverlay: true,
     zIndex: 2,
     layer: 3,
@@ -212,9 +245,10 @@ export const TERRAIN_REGISTRY: Record<string, TerrainDef> = {
     name: "River",
     color: "#0ea5e9",
     base: [
-      `${getAssetBase()}water/ford.png`
+      `${getAssetBase()}water/deep.png`,
+      `${getAssetBase()}water/wave.png`
     ],
-    variations: 1,
+    variations: 2,
     transitions: true,
     zIndex: 1,
     movementCost: 2
@@ -224,9 +258,12 @@ export const TERRAIN_REGISTRY: Record<string, TerrainDef> = {
     name: "Mountain",
     color: "#71717a",
     base: [
-      `${getAssetBase()}mountains/basic.png`
+      `${getAssetBase()}mountains/basic.png`,
+      `${getAssetBase()}mountains/basic2.png`,
+      `${getAssetBase()}mountains/basic3.png`,
+      `${getAssetBase()}mountains/peak.png`
     ],
-    variations: 1,
+    variations: 4,
     transitions: true,
     zIndex: 3,
     layer: 3,
@@ -238,9 +275,11 @@ export const TERRAIN_REGISTRY: Record<string, TerrainDef> = {
     name: "Forest",
     color: "#166534",
     base: [
-      `${getAssetBase()}forest/pine.png`
+      `${getAssetBase()}forest/pine.png`,
+      `${getAssetBase()}forest/mixed.png`,
+      `${getAssetBase()}forest/tropical.png`
     ],
-    variations: 1,
+    variations: 3,
     transitions: true,
     zIndex: 2,
     layer: 3,
