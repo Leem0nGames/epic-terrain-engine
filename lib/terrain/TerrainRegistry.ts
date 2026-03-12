@@ -4,6 +4,8 @@ export const LOCAL_ASSET_BASE = "/assets/terrain/";
 
 export const getAssetBase = () => USE_WESNOTH_CDN_ASSETS ? WESNOTH_ASSET_BASE : LOCAL_ASSET_BASE;
 
+import { WMLRules } from './WMLRules';
+
 export interface TerrainDef {
   id: string;
   name: string;
@@ -26,6 +28,13 @@ export function getTransitionUrl(fromCode: string, toCode: string, mask: number,
   // Check if transitions are enabled for both terrains
   if (!fromDef.transitions || !toDef.transitions) return null;
 
+  // Try to get image from WML rules first
+  const wmlImage = WMLRules.getImage(fromCode, toCode, mask);
+  if (wmlImage) {
+    return `${getAssetBase()}${wmlImage}`;
+  }
+
+  // Fallback to basic pattern matching
   const baseUrl = fromDef.base[variation % fromDef.base.length];
   const assetBase = getAssetBase();
   
@@ -37,8 +46,6 @@ export function getTransitionUrl(fromCode: string, toCode: string, mask: number,
   const folderName = parts.length > 0 ? parts.join('/') + '/' : '';
   
   // Map direction bits to Wesnoth suffixes
-  // bit 0: n, bit 1: ne, bit 2: se, bit 3: s, bit 4: sw, bit 5: nw
-  const directionSuffixes = ['-n', '-ne', '-se', '-s', '-sw', '-nw'];
   const directionNames = ['n', 'ne', 'se', 's', 'sw', 'nw'];
   
   // Find which bits are set in the mask
@@ -52,27 +59,11 @@ export function getTransitionUrl(fromCode: string, toCode: string, mask: number,
   // If no bits set, return null
   if (setBits.length === 0) return null;
   
-  // For single direction transitions, use the suffix
-  if (setBits.length === 1) {
-    const suffix = directionSuffixes[setBits[0]];
-    return `${assetBase}${folderName}${fileName}${suffix}.png`;
-  }
-  
   // For multiple directions, build the suffix
-  // Sort bits to ensure consistent ordering
   setBits.sort((a, b) => a - b);
-  
-  // Build suffix from direction names
   const suffix = setBits.map(i => directionNames[i]).join('-');
   
-  // Try different patterns based on Wesnoth naming convention
-  const patterns = [
-    `${assetBase}${folderName}${fileName}-${suffix}.png`, // basic-n-ne.png
-    `${assetBase}${folderName}${fileName}${directionSuffixes[setBits[0]]}.png`, // fallback to first direction
-  ];
-  
-  // Return the first pattern (most specific)
-  return patterns[0];
+  return `${assetBase}${folderName}${fileName}-${suffix}.png`;
 }
 
 export const DECORATION_REGISTRY: Record<string, { base: string[], offsetY?: number }> = {

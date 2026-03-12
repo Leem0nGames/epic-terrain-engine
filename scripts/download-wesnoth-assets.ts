@@ -6,6 +6,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import https from 'https';
+import { TerrainCache } from '../lib/terrain/TerrainCache';
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/wesnoth/wesnoth@master/data/core/images/terrain/';
 const LOCAL_ASSETS_DIR = path.join(__dirname, '..', 'public', 'assets', 'terrain');
@@ -73,7 +74,16 @@ const TERRAIN_CATEGORIES = {
 /**
  * Descarga un archivo desde una URL
  */
-function downloadFile(url: string, destPath: string): Promise<void> {
+async function downloadFile(url: string, destPath: string): Promise<void> {
+  // Normalizar URL para la caché
+  const relativeUrl = url.replace(CDN_BASE, '');
+  
+  // Verificar si el archivo ya existe localmente (caché)
+  if (TerrainCache.exists(relativeUrl)) {
+    console.log(`📦 Cacheado: ${path.basename(destPath)}`);
+    return;
+  }
+
   return new Promise((resolve, reject) => {
     // Crear directorio si no existe
     const dir = path.dirname(destPath);
@@ -85,8 +95,10 @@ function downloadFile(url: string, destPath: string): Promise<void> {
     
     https.get(url, (response) => {
       if (response.statusCode === 404) {
-        console.warn(`⚠️  Archivo no encontrado (404): ${url}`);
+        console.warn(`⚠️  No encontrado (404): ${path.basename(destPath)}`);
         file.close();
+        // Marcar en caché que este archivo no existe
+        TerrainCache.setExists(relativeUrl, false);
         resolve();
         return;
       }
@@ -95,6 +107,8 @@ function downloadFile(url: string, destPath: string): Promise<void> {
       file.on('finish', () => {
         file.close();
         console.log(`✅ Descargado: ${path.basename(destPath)}`);
+        // Marcar en caché que este archivo existe
+        TerrainCache.setExists(relativeUrl, true);
         resolve();
       });
     }).on('error', (err) => {
@@ -191,10 +205,17 @@ async function main() {
   console.log(`CDN Base: ${CDN_BASE}`);
   console.log(`Directorio local: ${LOCAL_ASSETS_DIR}\n`);
 
+  // Limpiar caché antigua
+  TerrainCache.cleanOldCache();
+
   // Descargar cada categoría
   for (const [categoryName, categoryData] of Object.entries(TERRAIN_CATEGORIES)) {
     await downloadCategory(categoryName, categoryData);
   }
+
+  // Descargar transiciones adicionales para combinaciones de direcciones
+  console.log('\n📥 Descargando transiciones adicionales...\n');
+  await downloadAdditionalTransitions();
 
   // Generar JSON con la estructura
   generateAssetsJSON();
@@ -202,6 +223,34 @@ async function main() {
   console.log('\n🎉 ¡Descarga completada!');
   console.log('\nNota: Algunos archivos pueden no existir en el repo de Wesnoth.');
   console.log('Esto es normal ya que Wesnoth usa un sistema WML dinámico.');
+}
+
+/**
+ * Descargar transiciones adicionales para combinaciones de direcciones
+ */
+async function downloadAdditionalTransitions() {
+  const directionCombinations = [
+    'n-ne', 'ne-se', 'se-s', 's-sw', 'sw-nw', 'nw-n', // Pares adyacentes
+    'n-ne-se', 'ne-se-s', 'se-s-sw', 's-sw-nw', 'sw-nw-n', 'nw-n-ne', // Tres direcciones
+    'n-se', 'ne-s', 'se-sw', 's-nw', 'sw-n', 'nw-ne', // Pares opuestos
+  ];
+
+  const categories = ['mountains', 'grass', 'water', 'forest', 'sand', 'frozen'];
+
+  for (const category of categories) {
+    for (const combo of directionCombinations) {
+      const url = `${CDN_BASE}${category}/${category}-${combo}.png`;
+      const dest = path.join(LOCAL_ASSETS_DIR, category, `${category}-${combo}.png`);
+      
+      // Solo descargar si no está en caché
+      const relativeUrl = `${category}/${category}-${combo}.png`;
+      if (!TerrainCache.exists(relativeUrl)) {
+        await downloadFile(url, dest);
+      } else {
+        console.log(`📦 Cacheado: ${category}-${combo}.png`);
+      }
+    }
+  }
 }
 
 // Ejecutar
