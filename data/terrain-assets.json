@@ -1,0 +1,175 @@
+{
+  "mountains": {
+    "base": [
+      "/assets/terrain/mountains/basic.png",
+      "/assets/terrain/mountains/basic2.png",
+      "/assets/terrain/mountains/basic3.png",
+      "/assets/terrain/mountains/dry.png",
+      "/assets/terrain/mountains/snow.png",
+      "/assets/terrain/mountains/peak.png",
+      "/assets/terrain/mountains/volcano.png"
+    ],
+    "tile": [
+      "/assets/terrain/mountains/basic-tile.png",
+      "/assets/terrain/mountains/dry-tile.png",
+      "/assets/terrain/mountains/snow-tile.png",
+      "/assets/terrain/mountains/volcano-tile.png"
+    ],
+    "transitions": [
+      "/assets/terrain/mountains/basic-n.png",
+      "/assets/terrain/mountains/basic-ne.png",
+      "/assets/terrain/mountains/basic-se.png",
+      "/assets/terrain/mountains/basic-s.png",
+      "/assets/terrain/mountains/basic-sw.png",
+      "/assets/terrain/mountains/basic-nw.png",
+      "/assets/terrain/mountains/basic-n-ne.png",
+      "/assets/terrain/mountains/basic-ne-se.png",
+      "/assets/terrain/mountains/basic-se-s.png",
+      "/assets/terrain/mountains/basic-s-sw.png",
+      "/assets/terrain/mountains/basic-sw-nw.png",
+      "/assets/terrain/mountains/basic-nw-n.png",
+      "/assets/terrain/mountains/dry-n.png",
+      "/assets/terrain/mountains/dry-ne.png",
+      "/assets/terrain/mountains/dry-se.png",
+      "/assets/terrain/mountains/dry-s.png",
+      "/assets/terrain/mountains/dry-sw.png",
+      "/assets/terrain/mountains/dry-nw.png",
+      "/assets/terrain/mountains/snow-n.png",
+      "/assets/terrain/mountains/snow-ne.png",
+      "/assets/terrain/mountains/snow-se.png",
+      "/assets/terrain/mountains/snow-s.png",
+      "/assets/terrain/mountains/snow-sw.png",
+      "/assets/terrain/mountains/snow-nw.png"
+    ],
+    "clusters": [
+      "/assets/terrain/mountains/basic_range1_1.png",
+      "/assets/terrain/mountains/basic_range1_2.png",
+      "/assets/terrain/mountains/basic_range1_3.png",
+      "/assets/terrain/mountains/basic_range2_1.png",
+      "/assets/terrain/mountains/basic_range2_2.png",
+      "/assets/terrain/mountains/basic5_1.png",
+      "/assets/terrain/mountains/basic5_2.png",
+      "/assets/terrain/mountains/basic5_3.png",
+      "/assets/terrain/mountains/basic6_1.png",
+      "/assets/terrain/mountains/basic6_2.png",
+      "/assets/terrain/mountains/basic6_3.png"
+    ]
+  },
+  "grass": {
+    "base": [
+      "/assets/terrain/grass/green.png",
+      "/assets/terrain/grass/green2.png",
+      "/assets/terrain/grass/green3.png",
+      "/assets/terrain/grass/green4.png",
+      "/assets/terrain/grass/dry.png",
+      "/assets/terrain/grass/light.png",
+      "/assets/terrain/grass/light2.png"
+    ],
+    "tile": [],
+    "transitions": [
+      "/assets/terrain/grass/green-n.png",
+      "/assets/terrain/grass/green-ne.png",
+      "/assets/terrain/grass/green-se.png",
+      "/assets/terrain/grass/green-s.png",
+      "/assets/terrain/grass/green-sw.png",
+      "/assets/terrain/grass/green-nw.png"
+    ],
+    "clusters": []
+  },
+  "water": {
+    "base": [
+      "/assets/terrain/water/deep.png",
+      "/assets/terrain/water/deep2.png",
+      "/assets/terrain/water/wave.png",
+      "/assets/terrain/water/wave2.png",
+      "/assets/terrain/water/wave3.png"
+    ],
+    "tile": [],
+    "transitions": [
+      "/assets/terrain/water/deep-n.png",
+      "/assets/terrain/water/deep-ne.png",
+      "/assets/terrain/water/deep-se.png",
+      "/assets/terrain/water/deep-s.png",
+      "/assets/terrain/water/deep-sw.png",
+      "/assets/terrain/water/deep-nw.png"
+    ],
+    "clusters": []
+  },
+  "forest": {
+    "base": [
+      "/assets/terrain/forest/pine.png",
+      "/assets/terrain/forest/tropical.png",
+      "/assets/terrain/forest/mixed.png"
+    ],
+    "tile": [],
+    "transitions": [
+      "/assets/terrain/forest/pine-n.png",
+      "/assets/terrain/forest/pine-ne.png",
+      "/assets/terrain/forest/pine-se.png",
+      "/assets/terrain/forest/pine-s.png",
+      "/assets/terrain/forest/pine-sw.png",
+      "/assets/terrain/forest/pine-nw.png"
+    ],
+    "clusters": []
+  },
+  "sand": {
+    "base": [
+      "/assets/terrain/sand/beach.png",
+      "/assets/terrain/sand/desert.png",
+      "/assets/terrain/sand/dune.png"
+    ],
+    "tile": [],
+    "transitions": [
+      "/assets/terrain/sand/beach-n.png",
+      "/assets/terrain/sand/beach-ne.png",
+      "/assets/terrain/sand/beach-se.png",
+      "/assets/terrain/sand/beach-s.png",
+      "/assets/terrain/sand/beach-sw.png",
+      "/assets/terrain/sand/beach-nw.png"
+    ],
+    "clusters": []
+  },
+  "frozen": {
+    "base": [
+      "/assets/terrain/frozen/snow.png",
+      "/assets/terrain/frozen/ice.png"
+    ],
+    "tile": [],
+    "transitions": [
+      "/assets/terrain/frozen/snow-n.png",
+      "/assets/terrain/frozen/snow-ne.png",
+      "/assets/terrain/frozen/snow-se.png",
+      "/assets/terrain/frozen/snow-s.png",
+      "/assets/terrain/frozen/snow-sw.png",
+      "/assets/terrain/frozen/snow-nw.png"
+    ],
+    "clusters": []
+  },
+  "castle": {
+    "base": [
+      "/assets/terrain/castle/keep.png",
+      "/assets/terrain/castle/ruin.png",
+      "/assets/terrain/castle/village.png"
+    ],
+    "tile": [],
+    "transitions": [
+      "/assets/terrain/castle/keep-n.png",
+      "/assets/terrain/castle/keep-ne.png",
+      "/assets/terrain/castle/keep-se.png",
+      "/assets/terrain/castle/keep-s.png",
+      "/assets/terrain/castle/keep-sw.png",
+      "/assets/terrain/castle/keep-nw.png"
+    ],
+    "clusters": []
+  },
+  "village": {
+    "base": [
+      "/assets/terrain/village/human.png",
+      "/assets/terrain/village/orc.png",
+      "/assets/terrain/village/elven.png"
+    ],
+    "tile": [],
+    "transitions": [],
+    "clusters": []
+  }
+}

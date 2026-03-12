@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { TERRAIN_REGISTRY } from '../lib/terrain/TerrainRegistry';
 import { HexGridRenderer } from '../components/HexGridRenderer';
+import { PixiHexGridRenderer } from '../components/PixiHexGridRenderer';
 import { MapGenerator } from '../lib/terrain/MapGenerator';
 import { TectonicMapGenerator } from '../lib/terrain/TectonicMapGenerator';
 import { TerrainResolver } from '../lib/terrain/TerrainResolver';
@@ -12,7 +13,7 @@ import { HexGrid, HexCell } from '../lib/hex/HexGrid';
 import { UnitInstance, UNIT_REGISTRY } from '../lib/units/UnitRegistry';
 
 export default function Page() {
-  const [seed, setSeed] = useState(Math.floor(Math.random() * 10000));
+  const [seed, setSeed] = useState(() => Math.floor(Math.random() * 10000));
   const [debug, setDebug] = useState(false);
   const [useTectonic, setUseTectonic] = useState(false);
   const [units, setUnits] = useState<UnitInstance[]>([]);
@@ -36,7 +37,12 @@ export default function Page() {
     TransitionResolver.resolve(grid);
     OverlayResolver.resolve(grid);
     
-    // Spawn some initial units
+    return { grid };
+  }, [seed, useTectonic]);
+
+  // Generate units separately from the map
+  React.useEffect(() => {
+    const grid = mapData.grid;
     const initialUnits: UnitInstance[] = [];
     let playerSpawned = false;
     let enemySpawned = false;
@@ -72,9 +78,7 @@ export default function Page() {
     }
 
     setUnits(initialUnits);
-
-    return { grid };
-  }, [seed, useTectonic]);
+  }, [mapData]);
 
   const { grid } = mapData;
 
@@ -163,14 +167,10 @@ export default function Page() {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-3 aspect-square lg:aspect-video bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl">
-            <HexGridRenderer 
+             <PixiHexGridRenderer 
               grid={grid} 
               size={30} 
               debug={debug} 
-              units={units}
-              onUnitMove={handleUnitMove}
-              onUnitSelect={(u) => setSelectedUnitId(u?.id || null)}
-              onUnitAttack={handleUnitAttack}
             />
           </div>
 

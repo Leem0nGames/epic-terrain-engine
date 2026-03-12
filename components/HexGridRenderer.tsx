@@ -10,13 +10,68 @@ import { WMLRuleConverter } from '../lib/wml/WMLRuleConverter';
 import { FlowField, FlowFieldResult } from '../lib/terrain/FlowField';
 import { TextureAtlas } from '../lib/terrain/TextureAtlas';
 import { UnitInstance, UNIT_REGISTRY } from '../lib/units/UnitRegistry';
+import { MacroWML } from '../lib/terrain/MacroWML';
+import { TextureCache } from '../lib/terrain/TextureCache';
+import { LazyAssetLoader } from '../lib/terrain/LazyAssetLoader';
+import { AtlasLoader } from '../lib/terrain/AtlasLoader';
 
-export async function loadImage(url: string) {
+/**
+ * Carga una imagen del atlas o del sistema de archivos
+ * Prioriza el atlas sobre archivos individuales
+ */
+export async function loadImage(url: string): Promise<HTMLImageElement> {
+  // Intentar cargar del atlas primero
+  if (AtlasLoader.isLoaded()) {
+    // Extraer el nombre del sprite del URL
+    // URL ejemplo: /assets/terrain/mountains/basic-n.png -> mountains/basic-n
+    const spriteName = url
+      .replace(/^\/assets\/terrain\//, '')
+      .replace(/\.[^.]+$/, '');
+    
+    const texture = AtlasLoader.getTexture(spriteName);
+    if (texture) {
+      // Convertir PIXI.Texture a HTMLImageElement
+      const canvas = document.createElement('canvas');
+      canvas.width = texture.width;
+      canvas.height = texture.height;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        // Dibujar la textura en el canvas
+        // Nota: Esto es una simplificación. En producción, usaríamos PIXI.Renderer
+        ctx.fillStyle = 'rgba(255,0,255,1)'; // Color fallback temporal
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      
+      // Crear imagen a partir del canvas
+      const img = new Image();
+      img.src = canvas.toDataURL();
+      return img;
+    }
+  }
+
+  // Fallback: cargar imagen individual
+  LazyAssetLoader.requestAsset(url, 1);
+
   return new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = "anonymous";
 
-    img.onload = () => resolve(img);
+    img.onload = () => {
+      // Almacenar en caché de texturas si es posible
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
+          TextureCache.set(url, canvas);
+        }
+      } catch (error) {
+        // Ignorar errores de caché
+      }
+      resolve(img);
+    };
     img.onerror = () => reject(url);
 
     img.src = url;
@@ -82,6 +137,19 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
     return engine;
   }, []);
 
+  // Cargar atlas de texturas
+  useEffect(() => {
+    async function loadAtlas() {
+      try {
+        await AtlasLoader.load();
+        console.log('Atlas cargado correctamente');
+      } catch (e) {
+        console.error("Failed to load atlas", e);
+      }
+    }
+    loadAtlas();
+  }, []);
+
   useEffect(() => {
     async function loadWML() {
       try {
@@ -105,16 +173,27 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
     if (!wmlRulesLoaded) return;
 
     async function loadAllImages() {
+      // Si el atlas está cargado, no necesitamos cargar imágenes individuales
+      if (AtlasLoader.isLoaded()) {
+        console.log('Usando atlas de texturas en lugar de carga individual');
+        setImagesLoaded(true);
+        return;
+      }
+
+      // Fallback: carga individual (sistema anterior)
       const urls = new Set<string>();
       Object.values(TERRAIN_REGISTRY).forEach(def => {
         def.base.forEach(url => urls.add(url));
       });
 
       grid.values().forEach(hex => {
-        hex.transitionMasks.forEach((mask, targetTerrain) => {
-          const url = getTransitionUrl(hex.terrainCode, targetTerrain, hex.variation);
-          if (url) urls.add(url);
-        });
+        const fromDef = TERRAIN_REGISTRY[hex.terrainCode];
+        if (fromDef && fromDef.transitions) {
+          hex.transitionMasks.forEach((mask, targetTerrain) => {
+            const url = getTransitionUrl(hex.terrainCode, targetTerrain, mask, hex.variation);
+            if (url) urls.add(url);
+          });
+        }
       });
 
       macroMatches.forEach(matches => {

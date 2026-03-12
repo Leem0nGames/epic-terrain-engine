@@ -7,12 +7,11 @@ export interface MapGenConfig {
   seed: number;
 }
 
-// Simple hash function for deterministic variations
+// Improved hash function for deterministic variations without diagonal patterns
 function hash(q: number, r: number, seed: number): number {
-  let h = (q * 31 + r * 17 + seed) ^ 0x5a5a5a5a;
-  h = Math.imul(h, 0x5bd1e995);
-  h ^= h >>> 15;
-  return Math.abs(h);
+  let n = q * 374761393 + r * 668265263 + seed;
+  n = (n ^ (n >> 13)) * 1274126177;
+  return Math.abs(n);
 }
 
 export class MapGenerator {
@@ -27,21 +26,25 @@ export class MapGenerator {
         const axialQ = q - Math.floor(r / 2);
         const axialR = r;
 
-        // Continent scale (large landmasses)
-        const continentNoise = Noise.fbm(q * 0.03, r * 0.03, 4, seed);
-        // Detail scale (local bumps)
-        const detailNoise = Noise.fbm(q * 0.15, r * 0.15, 2, seed + 10);
+        // Convert hex coordinates to Cartesian coordinates for noise sampling
+        // This prevents the triangular pattern artifact
+        const { x, y } = HexGrid.hexToPixel(axialQ, axialR, 1);
+
+        // Continent scale (large landmasses) - use Cartesian coordinates
+        const continentNoise = Noise.fbm(x * 0.005, y * 0.005, 4, seed);
+        // Detail scale (local bumps) - use Cartesian coordinates
+        const detailNoise = Noise.fbm(x * 0.03, y * 0.03, 2, seed + 10);
         
         // Combine for final height
         const h = continentNoise * 0.8 + detailNoise * 0.2;
         
         // Temperature map (depends on latitude and noise)
         const lat = Math.abs((r / height) - 0.5) * 2; // 0 at equator, 1 at poles
-        const tNoise = Noise.fbm(q * 0.05, r * 0.05, 3, seed + 100);
+        const tNoise = Noise.fbm(x * 0.01, y * 0.01, 3, seed + 100);
         const t = (1 - lat) * 0.6 + tNoise * 0.4;
 
         // Moisture map
-        const m = Noise.fbm(q * 0.08, r * 0.08, 3, seed + 200);
+        const m = Noise.fbm(x * 0.015, y * 0.015, 3, seed + 200);
 
         const cell: HexCell = {
           q: axialQ,

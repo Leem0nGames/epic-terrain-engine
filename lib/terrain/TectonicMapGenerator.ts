@@ -67,9 +67,12 @@ export class TectonicMapGenerator {
         const axialQ = q - Math.floor(r / 2);
         const axialR = r;
 
+        // Convert hex coordinates to Cartesian coordinates for noise sampling
+        const { x, y } = HexGrid.hexToPixel(axialQ, axialR, 1);
+
         // Temperature map (depends on latitude and noise)
         const lat = Math.abs((r / height) - 0.5) * 2; // 0 at equator, 1 at poles
-        const tNoise = Noise.fbm(axialQ * 0.05, axialR * 0.05, 3, seed + 100);
+        const tNoise = Noise.fbm(x * 0.01, y * 0.01, 3, seed + 100);
         temperatureMap[r][q] = (1 - lat) * 0.6 + tNoise * 0.4;
       }
     }
@@ -81,8 +84,11 @@ export class TectonicMapGenerator {
         const axialQ = q - Math.floor(r / 2);
         const axialR = r;
 
+        // Convert hex coordinates to Cartesian coordinates for noise sampling
+        const { x, y } = HexGrid.hexToPixel(axialQ, axialR, 1);
+
         // Base moisture map
-        moistureMap[r][q] = Noise.fbm(axialQ * 0.08, axialR * 0.08, 3, seed + 200);
+        moistureMap[r][q] = Noise.fbm(x * 0.015, y * 0.015, 3, seed + 200);
       }
     }
 
@@ -321,12 +327,11 @@ export class TectonicMapGenerator {
    }
 
   private static addVariantsAndDecorations(grid: HexGrid, seed: number): void {
-    // Simple hash function for deterministic variations
+    // Improved hash function for deterministic variations without diagonal patterns
     function hash(q: number, r: number, seed: number): number {
-      let h = (q * 31 + r * 17 + seed) ^ 0x5a5a5a5a;
-      h = Math.imul(h, 0x5bd1e995);
-      h ^= h >>> 15;
-      return Math.abs(h);
+      let n = q * 374761393 + r * 668265263 + seed;
+      n = (n ^ (n >> 13)) * 1274126177;
+      return Math.abs(n);
     }
 
     for (const cell of grid.values()) {
