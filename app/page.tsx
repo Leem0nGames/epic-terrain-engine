@@ -210,21 +210,23 @@ export default function Page() {
           </div>
           
           {/* Mini-map overlay */}
-          <div className="absolute bottom-20 left-4 w-36 h-28 bg-slate-900/80 backdrop-blur-sm rounded-lg border border-slate-700 overflow-hidden shadow-xl">
+          <div className="absolute bottom-20 left-4 w-36 h-28 bg-slate-900/80 backdrop-blur-sm rounded-lg border border-slate-700 overflow-hidden shadow-xl z-10">
             <div className="w-full h-full bg-slate-800 flex items-center justify-center">
               <span className="text-xs text-slate-500">Mini-map</span>
             </div>
           </div>
 
           {/* Action Bar */}
-          <GameActionBar 
-            onEndTurn={endTurn}
-            onNewMap={() => setSeed(Math.floor(Math.random() * 10000))}
-            onToggleTectonic={() => setUseTectonic(!useTectonic)}
-            useTectonic={useTectonic}
-            onToggleDebug={() => setDebug(!debug)}
-            debug={debug}
-          />
+          <div className="z-10">
+            <GameActionBar 
+              onEndTurn={endTurn}
+              onNewMap={() => setSeed(Math.floor(Math.random() * 10000))}
+              onToggleTectonic={() => setUseTectonic(!useTectonic)}
+              useTectonic={useTectonic}
+              onToggleDebug={() => setDebug(!debug)}
+              debug={debug}
+            />
+          </div>
         </div>
 
         {/* Right Sidebar - Minimap & Info */}

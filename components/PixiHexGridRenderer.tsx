@@ -124,8 +124,11 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       });
 
       // Append canvas to container
-      const canvas = app.view as unknown as Node;
-      containerRef.current.appendChild(canvas);
+      // En Pixi.js v7, app.view es un ICanvas, necesitamos acceder al canvas real
+      const canvasElement = app.view as unknown as HTMLCanvasElement;
+      if (canvasElement && containerRef.current) {
+        containerRef.current.appendChild(canvasElement);
+      }
       appRef.current = app;
       
       console.log('Pixi initialized:', width, height);
