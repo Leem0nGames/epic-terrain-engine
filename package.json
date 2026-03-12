@@ -20,6 +20,7 @@
     "maxrects-packer": "^2.7.3",
     "motion": "^12.23.24",
     "next": "^15.4.9",
+    "pixi-viewport": "^5.1.0",
     "pixi.js": "^7.4.3",
     "postcss": "^8.5.6",
     "react": "^19.2.1",

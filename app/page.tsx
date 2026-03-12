@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { TERRAIN_REGISTRY } from '../lib/terrain/TerrainRegistry';
 import { HexGridRenderer } from '../components/HexGridRenderer';
+import { PixiHexGridRenderer } from '../components/PixiHexGridRenderer';
 import { MapGenerator } from '../lib/terrain/MapGenerator';
 import { TectonicMapGenerator } from '../lib/terrain/TectonicMapGenerator';
 import { TerrainResolver } from '../lib/terrain/TerrainResolver';
@@ -166,14 +167,10 @@ export default function Page() {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-3 aspect-square lg:aspect-video bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl">
-            <HexGridRenderer 
+             <PixiHexGridRenderer 
               grid={grid} 
               size={30} 
               debug={debug} 
-              units={units}
-              onUnitMove={handleUnitMove}
-              onUnitSelect={(u) => setSelectedUnitId(u?.id || null)}
-              onUnitAttack={handleUnitAttack}
             />
           </div>
 
