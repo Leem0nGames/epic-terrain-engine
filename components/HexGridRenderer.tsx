@@ -378,7 +378,7 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
         const tDef = TERRAIN_REGISTRY[targetTerrain];
         if (!tDef) return;
 
-        const url = getTransitionUrl(hex.terrainCode, targetTerrain, hex.variation);
+        const url = getTransitionUrl(hex.terrainCode, targetTerrain, mask, hex.variation);
         const uv = url ? atlasRef.current?.getUV(url) : null;
 
         for (let dir = 0; dir < 6; dir++) {
@@ -969,12 +969,28 @@ function drawHexPolygon(ctx: CanvasRenderingContext2D, x: number, y: number, siz
   ctx.save();
   ctx.translate(x, y);
   ctx.beginPath();
+  // Flat-top hexagon vertices (clockwise from East)
+  // Vertices are at 0, 60, 120, 180, 240, 300 degrees
+  // x = size * cos(angle), y = size * sin(angle)
+  
+  // 0 degrees (East)
   ctx.moveTo(size, 0);
-  ctx.lineTo(size / 2, size * Math.sqrt(3) / 2);
-  ctx.lineTo(-size / 2, size * Math.sqrt(3) / 2);
+  
+  // 60 degrees (South-East)
+  ctx.lineTo(size * Math.cos(Math.PI / 3), size * Math.sin(Math.PI / 3));
+  
+  // 120 degrees (South-West)
+  ctx.lineTo(size * Math.cos(2 * Math.PI / 3), size * Math.sin(2 * Math.PI / 3));
+  
+  // 180 degrees (West)
   ctx.lineTo(-size, 0);
-  ctx.lineTo(-size / 2, -size * Math.sqrt(3) / 2);
-  ctx.lineTo(size / 2, -size * Math.sqrt(3) / 2);
+  
+  // 240 degrees (North-West)
+  ctx.lineTo(size * Math.cos(4 * Math.PI / 3), size * Math.sin(4 * Math.PI / 3));
+  
+  // 300 degrees (North-East)
+  ctx.lineTo(size * Math.cos(5 * Math.PI / 3), size * Math.sin(5 * Math.PI / 3));
+  
   ctx.closePath();
   ctx.fillStyle = color;
   ctx.fill();
@@ -994,16 +1010,22 @@ function drawRiver(ctx: CanvasRenderingContext2D, x: number, y: number, size: nu
    ctx.lineCap = 'round';
    ctx.lineJoin = 'round';
 
+  // Bit 0: N (North) - Angle 90 degrees (top side)
+  // Bit 1: NE (North-East) - Angle 330 degrees (top-right side)
+  // Bit 2: SE (South-East) - Angle 30 degrees (bottom-right side)
+  // Bit 3: S (South) - Angle 270 degrees (bottom side)
+  // Bit 4: SW (South-West) - Angle 150 degrees (bottom-left side)
+  // Bit 5: NW (North-West) - Angle 210 degrees (top-left side)
   const angles = [
-    Math.PI / 6,        // 0: Right (30 deg)
-    -Math.PI / 6,       // 1: Top Right (-30 deg)
-    -Math.PI / 2,       // 2: Top Left (-90 deg)
-    -5 * Math.PI / 6,   // 3: Left (-150 deg)
-    5 * Math.PI / 6,    // 4: Bottom Left (150 deg)
-    Math.PI / 2         // 5: Bottom Right (90 deg)
+    Math.PI / 2,        // 0: North (90 deg)
+    11 * Math.PI / 6,   // 1: North-East (330 deg)
+    Math.PI / 6,        // 2: South-East (30 deg)
+    3 * Math.PI / 2,    // 3: South (270 deg)
+    5 * Math.PI / 6,    // 4: South-West (150 deg)
+    7 * Math.PI / 6     // 5: North-West (210 deg)
   ];
 
-  const edgeDist = size * Math.sqrt(3) / 2;
+  const dist = size * Math.sqrt(3) / 2; // Distance to sides (not vertices)
 
   let connections = 0;
   for (let i = 0; i < 6; i++) {
@@ -1020,13 +1042,13 @@ function drawRiver(ctx: CanvasRenderingContext2D, x: number, y: number, size: nu
     ctx.fillStyle = '#0ea5e9';
     ctx.fill();
   } else if (connections === 1) {
-    // End of river (spring or delta)
+    // End of river (spring or delta) - flows to one side
     for (let i = 0; i < 6; i++) {
       if ((mask & (1 << i)) !== 0) {
         ctx.moveTo(0, 0);
-        const edgeX = Math.cos(angles[i]) * edgeDist;
-        const edgeY = Math.sin(angles[i]) * edgeDist;
-        ctx.lineTo(edgeX, edgeY);
+        const sideX = Math.cos(angles[i]) * dist;
+        const sideY = Math.sin(angles[i]) * dist;
+        ctx.lineTo(sideX, sideY);
       }
     }
     ctx.stroke();
@@ -1037,32 +1059,32 @@ function drawRiver(ctx: CanvasRenderingContext2D, x: number, y: number, size: nu
     ctx.fillStyle = '#0ea5e9';
     ctx.fill();
   } else if (connections === 2) {
-    // Continuous river (straight or curve)
+    // Continuous river (straight or curve) between two sides
     let first = -1;
     for (let i = 0; i < 6; i++) {
       if ((mask & (1 << i)) !== 0) {
         if (first === -1) {
           first = i;
-          const edgeX = Math.cos(angles[i]) * edgeDist;
-          const edgeY = Math.sin(angles[i]) * edgeDist;
-          ctx.moveTo(edgeX, edgeY);
+          const sideX = Math.cos(angles[i]) * dist;
+          const sideY = Math.sin(angles[i]) * dist;
+          ctx.moveTo(sideX, sideY);
           ctx.lineTo(0, 0);
         } else {
-          const edgeX = Math.cos(angles[i]) * edgeDist;
-          const edgeY = Math.sin(angles[i]) * edgeDist;
-          ctx.lineTo(edgeX, edgeY);
+          const sideX = Math.cos(angles[i]) * dist;
+          const sideY = Math.sin(angles[i]) * dist;
+          ctx.lineTo(sideX, sideY);
         }
       }
     }
     ctx.stroke();
   } else {
-    // Junction (3 or more connections)
+    // Junction (3 or more connections) - flows to multiple sides
     for (let i = 0; i < 6; i++) {
       if ((mask & (1 << i)) !== 0) {
         ctx.moveTo(0, 0);
-        const edgeX = Math.cos(angles[i]) * edgeDist;
-        const edgeY = Math.sin(angles[i]) * edgeDist;
-        ctx.lineTo(edgeX, edgeY);
+        const sideX = Math.cos(angles[i]) * dist;
+        const sideY = Math.sin(angles[i]) * dist;
+        ctx.lineTo(sideX, sideY);
       }
     }
     ctx.stroke();

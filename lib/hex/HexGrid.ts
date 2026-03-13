@@ -91,24 +91,24 @@ export class HexGrid {
 
   static getNeighbor(q: number, r: number, direction: number): HexCoord {
     const dir = [
-      { q: 1, r: 0 },   // 0: Right
-      { q: 1, r: -1 },  // 1: Top Right
-      { q: 0, r: -1 },  // 2: Top Left
-      { q: -1, r: 0 },  // 3: Left
-      { q: -1, r: 1 },  // 4: Bottom Left
-      { q: 0, r: 1 }    // 5: Bottom Right
+      { q: 0, r: -1 },  // 0: North (N)
+      { q: 1, r: -1 },  // 1: North-East (NE)
+      { q: 1, r: 0 },   // 2: South-East (SE)
+      { q: 0, r: 1 },   // 3: South (S)
+      { q: -1, r: 1 },  // 4: South-West (SW)
+      { q: -1, r: 0 }   // 5: North-West (NW)
     ][direction % 6];
     return { q: q + dir.q, r: r + dir.r };
   }
 
   static getNeighborCoords(q: number, r: number): HexCoord[] {
     return [
-      { q: 1, r: 0 },
-      { q: 1, r: -1 },
-      { q: 0, r: -1 },
-      { q: -1, r: 0 },
-      { q: -1, r: 1 },
-      { q: 0, r: 1 }
+      { q: 0, r: -1 },  // N
+      { q: 1, r: -1 },  // NE
+      { q: 1, r: 0 },   // SE
+      { q: 0, r: 1 },   // S
+      { q: -1, r: 1 },  // SW
+      { q: -1, r: 0 }   // NW
     ].map(dir => ({ q: q + dir.q, r: r + dir.r }));
   }
 
