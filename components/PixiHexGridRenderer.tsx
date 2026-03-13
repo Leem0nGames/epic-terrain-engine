@@ -51,7 +51,7 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
 
     const sprite = new PIXI.Sprite(texture);
     
-    // Posicionar el sprite
+    // Posicionar el sprite usando coordenadas de hexágono plano
     const { x, y } = HexGrid.hexToPixel(hex.q, hex.r, hexSize);
     sprite.x = x;
     sprite.y = y;
@@ -144,9 +144,26 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       app.stage.addChild(world);
       worldRef.current = world;
       
+      // Calcular el centro del mapa basado en las dimensiones de la grid
+      // El mapa tiene dimensiones grid.width x grid.height
+      // Necesitamos calcular el centro del mapa en coordenadas de píxeles
+      const gridWidth = 30; // Ancho de la grid
+      const gridHeight = 20; // Alto de la grid
+      
+      // Calcular el rango de coordenadas q y r
+      // Si el mapa es 30x20, las coordenadas van de -15 a 14 en q y -10 a 9 en r
+      const minQ = -Math.floor(gridWidth / 2);
+      const maxQ = Math.floor(gridWidth / 2) - 1;
+      const minR = -Math.floor(gridHeight / 2);
+      const maxR = Math.floor(gridHeight / 2) - 1;
+      
+      // Calcular el centro del mapa en coordenadas de píxeles
+      const centerX = (HexGrid.hexToPixel(maxQ, 0, size).x + HexGrid.hexToPixel(minQ, 0, size).x) / 2;
+      const centerY = (HexGrid.hexToPixel(0, maxR, size).y + HexGrid.hexToPixel(0, minR, size).y) / 2;
+      
       // Centrar el mundo en el centro de la pantalla
-      world.x = width / 2;
-      world.y = height / 2;
+      world.x = width / 2 - centerX;
+      world.y = height / 2 - centerY;
       
       // Mantener la cámara en (0,0) para que el mundo sea el que se mueve
       app.stage.x = 0;
@@ -157,7 +174,8 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
         stageX: app.stage.x, 
         stageY: app.stage.y, 
         stageScale: app.stage.scale.x,
-        worldPos: { x: world.x, y: world.y }
+        worldPos: { x: world.x, y: world.y },
+        mapCenter: { x: centerX, y: centerY }
       });
 
       // Cargar atlas si no está cargado
