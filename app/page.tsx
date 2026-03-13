@@ -12,6 +12,7 @@ import { TransitionResolver } from '../lib/terrain/TransitionResolver';
 import { OverlayResolver } from '../lib/terrain/OverlayResolver';
 import { HexGrid, HexCell } from '../lib/hex/HexGrid';
 import { UnitInstance, UNIT_REGISTRY } from '../lib/units/UnitRegistry';
+import { AssetsManager } from '../lib/terrain/AssetsManager';
 
 export default function Page() {
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 10000));
@@ -19,8 +20,27 @@ export default function Page() {
   const [useTectonic, setUseTectonic] = useState(false);
   const [units, setUnits] = useState<UnitInstance[]>([]);
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
+  const [assetsReady, setAssetsReady] = useState(false);
+  const [assetsError, setAssetsError] = useState<string | null>(null);
 
   const selectedUnit = units.find(u => u.id === selectedUnitId) || null;
+
+  // Inicializar AssetsManager al cargar la aplicación
+  React.useEffect(() => {
+    const initAssets = async () => {
+      try {
+        console.log('Inicializando AssetsManager...');
+        await AssetsManager.initialize();
+        setAssetsReady(true);
+        console.log('AssetsManager inicializado correctamente');
+      } catch (error) {
+        console.error('Error inicializando AssetsManager:', error);
+        setAssetsError(error instanceof Error ? error.message : 'Error desconocido');
+      }
+    };
+
+    initAssets();
+  }, []);
 
   const mapData = useMemo(() => {
     let grid: HexGrid;
@@ -135,6 +155,37 @@ export default function Page() {
     window.location.reload();
   };
 
+  const showAssetsStats = () => {
+    const stats = AssetsManager.getStats();
+    alert(`Estadísticas de AssetsManager:
+• Atlas cargado: ${stats.atlasLoaded ? 'Sí' : 'No'}
+• Texturas en caché: ${stats.cacheSize}
+• Hits de caché: ${stats.cacheHits}
+• Misses de caché: ${stats.cacheMisses}
+• Cola de carga lazy: ${stats.lazyLoaderQueueSize}`);
+  };
+
+  const clearTextureCache = () => {
+    AssetsManager.clearTextureCache();
+    alert('Caché de texturas limpiado');
+  };
+
+  // Mostrar pantalla de carga si los assets no están listos
+  if (!assetsReady) {
+    return (
+      <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-50 font-sans flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <h2 className="text-xl font-semibold mb-2">Cargando Assets</h2>
+          <p className="text-slate-400">Inicializando sistema de terrenos...</p>
+          {assetsError && (
+            <p className="text-red-400 mt-2 text-sm">{assetsError}</p>
+          )}
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-50 font-sans overflow-hidden">
       {/* Header Bar */}
@@ -159,6 +210,10 @@ export default function Page() {
           <div className="flex items-center gap-2 bg-slate-800/50 rounded-lg px-3 py-1.5">
             <span className="text-xs text-slate-400">Gold:</span>
             <span className="text-sm font-mono text-yellow-400">100</span>
+          </div>
+          <div className="flex items-center gap-2 bg-slate-800/50 rounded-lg px-3 py-1.5">
+            <span className="text-xs text-slate-400">Assets:</span>
+            <span className="text-sm font-mono text-green-400">✓</span>
           </div>
         </div>
 
@@ -195,6 +250,20 @@ export default function Page() {
           >
             Debug
           </button>
+          <button 
+            onClick={showAssetsStats}
+            className="px-3 py-1.5 bg-green-600 hover:bg-green-500 rounded-lg text-xs font-medium transition-colors"
+            title="Mostrar estadísticas de assets"
+          >
+            📊
+          </button>
+          <button 
+            onClick={clearTextureCache}
+            className="px-3 py-1.5 bg-orange-600 hover:bg-orange-500 rounded-lg text-xs font-medium transition-colors"
+            title="Limpiar caché de texturas"
+          >
+            🗑️
+          </button>
         </div>
       </header>
 
@@ -208,8 +277,7 @@ export default function Page() {
         <div className="flex-1 relative h-full min-h-[500px]">
           <div className="absolute inset-0 bg-slate-950 z-0 h-full min-h-[500px]">
             <PixiHexGridRenderer 
-              grid={grid} 
-              size={30} 
+              grid={mapData.grid} 
               debug={debug} 
             />
           </div>

@@ -28,7 +28,7 @@ export class MapGenerator {
 
         // Convert hex coordinates to Cartesian coordinates for noise sampling
         // This prevents the triangular pattern artifact
-        const { x, y } = HexGrid.hexToPixel(axialQ, axialR, 1);
+        const { x, y } = HexGrid.hexToPixel(axialQ, axialR);
 
         // Continent scale (large landmasses) - use Cartesian coordinates
         const continentNoise = Noise.fbm(x * 0.005, y * 0.005, 4, seed);

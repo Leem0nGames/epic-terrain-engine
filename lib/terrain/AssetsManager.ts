@@ -6,9 +6,8 @@
 import { AtlasLoader } from './AtlasLoader';
 import { LazyAssetLoader, ViewportBounds } from './LazyAssetLoader';
 import { TextureCache } from './TextureCache';
-import { TerrainRegistry } from './TerrainRegistry';
+import { TERRAIN_REGISTRY } from './TerrainRegistry';
 import { HexGrid } from '../hex/HexGrid';
-import { MapGenerator } from './MapGenerator';
 
 export interface AssetManagerConfig {
   maxConcurrentLoads?: number;
@@ -151,11 +150,12 @@ export class AssetsManager {
     }
 
     // Fallback a registro de terrenos
-    const terrainData = TerrainRegistry.getTerrain(terrainType);
-    if (terrainData && terrainData.sprite) {
-      console.log(`Cargando textura desde registro: ${terrainData.sprite}`);
-      // Aquí iría la lógica para cargar la textura individual
-      return null; // Placeholder
+    const terrainData = TERRAIN_REGISTRY[terrainType];
+    if (terrainData && terrainData.base?.length) {
+      const url = terrainData.base[0];
+      console.log(`Cargando textura desde registro: ${url}`);
+      // Retornamos el URL por ahora (el consumidor puede cargarlo como quiera)
+      return url;
     }
 
     console.warn(`Textura no encontrada para terreno: ${terrainType}`);

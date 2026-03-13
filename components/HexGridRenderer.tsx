@@ -276,7 +276,7 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
       const chunk = chunks.get(key)!;
       chunk.hexes.push(hex);
       
-      const { x, y } = HexGrid.hexToPixel(hex.q, hex.r, size);
+      const { x, y } = HexGrid.hexToPixel(hex.q, hex.r);
       const padding = size * 2;
       
       chunk.bounds.minX = Math.min(chunk.bounds.minX, x - padding);
@@ -330,7 +330,7 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
     const scale = (size * 2) / WESNOTH_HEX_WIDTH;
 
     const sortedHexes = chunk.hexes.map((hex: HexCell) => {
-      const { x, y } = HexGrid.hexToPixel(hex.q, hex.r, size);
+      const { x, y } = HexGrid.hexToPixel(hex.q, hex.r);
       return { hex, x, y };
     });
     sortedHexes.sort((a, b) => {
@@ -604,7 +604,7 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
 
     // Draw Units
     units.forEach(unit => {
-      const { x, y } = HexGrid.hexToPixel(unit.q, unit.r, size);
+      const { x, y } = HexGrid.hexToPixel(unit.q, unit.r);
       const def = UNIT_REGISTRY[unit.typeId];
       if (def) {
         const uv = atlasRef.current?.getUV(def.sprite);
@@ -655,7 +655,7 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
     });
 
     if (startHexRef.current && !selectedUnitRef.current) {
-      const { x, y } = HexGrid.hexToPixel(startHexRef.current.q, startHexRef.current.r, size);
+      const { x, y } = HexGrid.hexToPixel(startHexRef.current.q, startHexRef.current.r);
       ctx.beginPath();
       ctx.arc(x, y, size * 0.5, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(59, 130, 246, 0.5)'; // Blue highlight
@@ -667,11 +667,11 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
 
     if (pathRef.current.length > 0) {
       ctx.beginPath();
-      const start = HexGrid.hexToPixel(pathRef.current[0].q, pathRef.current[0].r, size);
+      const start = HexGrid.hexToPixel(pathRef.current[0].q, pathRef.current[0].r);
       ctx.moveTo(start.x, start.y);
       
       for (let i = 1; i < pathRef.current.length; i++) {
-        const p = HexGrid.hexToPixel(pathRef.current[i].q, pathRef.current[i].r, size);
+        const p = HexGrid.hexToPixel(pathRef.current[i].q, pathRef.current[i].r);
         ctx.lineTo(p.x, p.y);
       }
       
@@ -683,7 +683,7 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
       
       // Draw dots on each step
       pathRef.current.forEach(cell => {
-        const p = HexGrid.hexToPixel(cell.q, cell.r, size);
+        const p = HexGrid.hexToPixel(cell.q, cell.r);
         ctx.beginPath();
         ctx.arc(p.x, p.y, size * 0.2, 0, Math.PI * 2);
         ctx.fillStyle = '#facc15';
@@ -692,7 +692,7 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
       
       // Highlight target
       const target = pathRef.current[pathRef.current.length - 1];
-      const tp = HexGrid.hexToPixel(target.q, target.r, size);
+      const tp = HexGrid.hexToPixel(target.q, target.r);
       ctx.beginPath();
       ctx.arc(tp.x, tp.y, size * 0.5, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(250, 204, 21, 0.3)';
@@ -702,7 +702,7 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
       ctx.stroke();
     } else if (hoverHexRef.current && hoverHexRef.current !== startHexRef.current) {
       // Just highlight hover
-      const { x, y } = HexGrid.hexToPixel(hoverHexRef.current.q, hoverHexRef.current.r, size);
+      const { x, y } = HexGrid.hexToPixel(hoverHexRef.current.q, hoverHexRef.current.r);
       drawHexPolygon(ctx, x, y, size, 'transparent');
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
       ctx.lineWidth = 2;
@@ -819,7 +819,7 @@ export function HexGridRenderer({ grid, size, debug = true, units = [], onUnitMo
       const worldX = (mouseX - cameraRef.current.x) / cameraRef.current.zoom;
       const worldY = (mouseY - cameraRef.current.y) / cameraRef.current.zoom;
       
-      const { q, r } = HexGrid.pixelToHex(worldX, worldY, size);
+      const { q, r } = HexGrid.pixelToHex(worldX, worldY);
       const hovered = grid.get(q, r) || null;
       
       if (hovered !== hoverHexRef.current) {

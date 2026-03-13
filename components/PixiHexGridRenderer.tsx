@@ -8,7 +8,6 @@ import { TERRAIN_REGISTRY } from '../lib/terrain/TerrainRegistry';
 
 interface PixiHexGridRendererProps {
   grid: HexGrid;
-  size: number;
   debug?: boolean;
 }
 
@@ -20,7 +19,7 @@ interface CameraState {
 
 const CHUNK_SIZE = 32; // Tamaño de los chunks en hexágonos
 
-export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRendererProps) {
+export function PixiHexGridRenderer({ grid, debug = false }: PixiHexGridRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<PIXI.Application | null>(null);
   const worldRef = useRef<PIXI.Container | null>(null);
@@ -32,40 +31,53 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
   const lastMouseRef = useRef({ x: 0, y: 0 });
 
   // Función para crear un sprite de hexágono (definida antes de generateChunks)
-  const createHexSprite = (hex: HexCell, hexSize: number): PIXI.Sprite | null => {
-    // Obtener nombre del sprite basado en el terreno
+  const createHexSprite = (hex: HexCell): PIXI.Sprite | null => {
+    // Obtener definición del terreno
     const terrainDef = TERRAIN_REGISTRY[hex.terrainCode];
     if (!terrainDef || terrainDef.base.length === 0) {
-      console.log(`No terrain definition for: ${hex.terrainCode}`);
+      console.warn(`No terrain definition for: ${hex.terrainCode}`);
       return null;
     }
 
-    // Usar la primera variación para ahora
+    // Usar la primera variación por ahora
     const spriteName = terrainDef.base[0].replace('/assets/terrain/', '').replace('.png', '');
-    
-    const texture = AtlasLoader.getTexture(spriteName);
+
+    let texture = AtlasLoader.getTexture(spriteName);
+
+    // Fallback: cargar directamente del URL si no se encuentra en el atlas
     if (!texture) {
-      console.log(`No texture for sprite: ${spriteName}`);
+      const fallbackUrl = terrainDef.base[0];
+      console.warn(`Atlas texture missing for '${spriteName}', cargando desde URL: ${fallbackUrl}`);
+      try {
+        texture = PIXI.Texture.from(fallbackUrl);
+      } catch (e) {
+        console.error(`Error cargando textura desde URL ${fallbackUrl}:`, e);
+        return null;
+      }
+    }
+
+    if (!texture || !texture.baseTexture) {
+      console.warn(`Textura inválida para sprite: ${spriteName}`);
       return null;
     }
 
     const sprite = new PIXI.Sprite(texture);
-    
+
     // Posicionar el sprite usando coordenadas de hexágono plano
-    const { x, y } = HexGrid.hexToPixel(hex.q, hex.r, hexSize);
+    const { x, y } = HexGrid.hexToPixel(hex.q, hex.r);
     sprite.x = x;
     sprite.y = y;
-    
-    // Ajustar tamaño y pivot para centrar
+
+    // Ajustar tamaño y pivot para centrar (tiles son 72x72)
     sprite.anchor.set(0.5);
-    const scale = hexSize / Math.max(sprite.texture.width, sprite.texture.height) * 1.8;
+    const scale = HexGrid.HEX_WIDTH / Math.max(sprite.texture.width, sprite.texture.height) * 1.8;
     sprite.scale.set(scale);
-    
+
     return sprite;
   };
 
   // Función para generar chunks (definida antes de initPixi)
-  const generateChunks = (world: PIXI.Container, grid: HexGrid, hexSize: number) => {
+  const generateChunks = (world: PIXI.Container, grid: HexGrid) => {
     console.log('Generando chunks...');
     
     // Limpiar chunks anteriores
@@ -74,6 +86,7 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
 
     const chunks = new Map<string, PIXI.Container>();
     
+    let hexCount = 0;
     grid.values().forEach(hex => {
       const cq = Math.floor(hex.q / CHUNK_SIZE);
       const cr = Math.floor(hex.r / CHUNK_SIZE);
@@ -88,14 +101,15 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       const chunk = chunks.get(key)!;
       
       // Crear sprite para el hexágono
-      const sprite = createHexSprite(hex, hexSize);
+      const sprite = createHexSprite(hex);
       if (sprite) {
         chunk.addChild(sprite);
+        hexCount += 1;
       }
     });
 
     chunksRef.current = chunks;
-    console.log(`Generados ${chunks.size} chunks`);
+    console.log(`Generados ${chunks.size} chunks con ${hexCount} sprites`);
   };
 
   useEffect(() => {
@@ -144,32 +158,37 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       app.stage.addChild(world);
       worldRef.current = world;
       
-      // Calcular el centro del mapa basado en las dimensiones de la grid
-      // El mapa tiene dimensiones grid.width x grid.height
-      // Necesitamos calcular el centro del mapa en coordenadas de píxeles
-      const gridWidth = 30; // Ancho de la grid
-      const gridHeight = 20; // Alto de la grid
-      
-      // Calcular el rango de coordenadas q y r
-      // Si el mapa es 30x20, las coordenadas van de -15 a 14 en q y -10 a 9 en r
-      const minQ = -Math.floor(gridWidth / 2);
-      const maxQ = Math.floor(gridWidth / 2) - 1;
-      const minR = -Math.floor(gridHeight / 2);
-      const maxR = Math.floor(gridHeight / 2) - 1;
-      
-      // Calcular el centro del mapa en coordenadas de píxeles
-      const centerX = (HexGrid.hexToPixel(maxQ, 0, size).x + HexGrid.hexToPixel(minQ, 0, size).x) / 2;
-      const centerY = (HexGrid.hexToPixel(0, maxR, size).y + HexGrid.hexToPixel(0, minR, size).y) / 2;
-      
+      // Calcular los límites de píxeles del mapa según el grid actual
+      const getGridPixelBounds = (grid: HexGrid) => {
+        let minX = Infinity;
+        let maxX = -Infinity;
+        let minY = Infinity;
+        let maxY = -Infinity;
+
+        for (const cell of grid.values()) {
+          const { x, y } = HexGrid.hexToPixel(cell.q, cell.r);
+          minX = Math.min(minX, x);
+          maxX = Math.max(maxX, x);
+          minY = Math.min(minY, y);
+          maxY = Math.max(maxY, y);
+        }
+
+        return { minX, maxX, minY, maxY };
+      };
+
+      const bounds = getGridPixelBounds(grid);
+      const centerX = (bounds.minX + bounds.maxX) / 2;
+      const centerY = (bounds.minY + bounds.maxY) / 2;
+
       // Centrar el mundo en el centro de la pantalla
       world.x = width / 2 - centerX;
       world.y = height / 2 - centerY;
-      
+
       // Mantener la cámara en (0,0) para que el mundo sea el que se mueve
       app.stage.x = 0;
       app.stage.y = 0;
-      app.stage.scale.set(0.3); // Zoom out para ver más
-      
+      app.stage.scale.set(0.5); // Zoom inicial para ver más del mapa
+
       console.log('Camera centered:', { 
         stageX: app.stage.x, 
         stageY: app.stage.y, 
@@ -187,7 +206,7 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
           
           console.log('Atlas loaded, generating chunks...');
       // Generar chunks una vez cargado el atlas
-      generateChunks(world, grid, size);
+      generateChunks(world, grid);
       setIsLoading(false);
       
       // Log de sprites disponibles para debug
@@ -305,7 +324,7 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
         cleanupFunction();
       }
     };
-  }, [grid, size]);
+  }, [grid]);
 
   return (
     <div 

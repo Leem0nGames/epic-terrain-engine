@@ -68,7 +68,7 @@ export class TectonicMapGenerator {
         const axialR = r;
 
         // Convert hex coordinates to Cartesian coordinates for noise sampling
-        const { x, y } = HexGrid.hexToPixel(axialQ, axialR, 1);
+        const { x, y } = HexGrid.hexToPixel(axialQ, axialR);
 
         // Temperature map (depends on latitude and noise)
         const lat = Math.abs((r / height) - 0.5) * 2; // 0 at equator, 1 at poles
@@ -85,7 +85,7 @@ export class TectonicMapGenerator {
         const axialR = r;
 
         // Convert hex coordinates to Cartesian coordinates for noise sampling
-        const { x, y } = HexGrid.hexToPixel(axialQ, axialR, 1);
+        const { x, y } = HexGrid.hexToPixel(axialQ, axialR);
 
         // Base moisture map
         moistureMap[r][q] = Noise.fbm(x * 0.015, y * 0.015, 3, seed + 200);

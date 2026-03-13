@@ -58,16 +58,21 @@ export class HexGrid {
     return coords.map(coord => this.get(coord.q, coord.r) || null);
   }
   
-  // Flat-top hex math
-  static hexToPixel(q: number, r: number, size: number): { x: number, y: number } {
-    const x = size * (3/2 * q);
-    const y = size * (Math.sqrt(3) * (r + q/2));
+  // Flat-top hex math for 72x72 tiles with 54px vertical spacing
+  static HEX_WIDTH = 72;
+  static HEX_HEIGHT = 72;
+  static VERTICAL_SPACING = 54; // 3/4 of 72 with overlap
+
+  static hexToPixel(q: number, r: number): { x: number, y: number } {
+    const x = q * this.HEX_WIDTH;
+    const y = r * this.VERTICAL_SPACING + (q % 2 === 0 ? 0 : this.HEX_HEIGHT / 4);
     return { x, y };
   }
 
-  static pixelToHex(x: number, y: number, size: number): HexCoord {
-    const q = (2/3 * x) / size;
-    const r = (-1/3 * x + Math.sqrt(3)/3 * y) / size;
+  static pixelToHex(x: number, y: number): HexCoord {
+    // Aproximación inversa de hexToPixel
+    const q = Math.round(x / this.HEX_WIDTH);
+    const r = Math.round((y - (q % 2 === 0 ? 0 : this.HEX_HEIGHT / 4)) / this.VERTICAL_SPACING);
     return this.hexRound(q, r);
   }
 
