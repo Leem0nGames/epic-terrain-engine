@@ -144,13 +144,13 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       app.stage.addChild(world);
       worldRef.current = world;
       
-      // Mantener el mundo en (0,0) y mover la cámara (stage) para ver el mapa
-      world.x = 0;
-      world.y = 0;
+      // Centrar el mundo en el centro de la pantalla
+      world.x = width / 2;
+      world.y = height / 2;
       
-      // Centrar la cámara en el mapa
-      app.stage.x = width / 2;
-      app.stage.y = height / 2;
+      // Mantener la cámara en (0,0) para que el mundo sea el que se mueve
+      app.stage.x = 0;
+      app.stage.y = 0;
       app.stage.scale.set(0.3); // Zoom out para ver más
       
       console.log('Camera centered:', { 
@@ -204,13 +204,13 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       };
 
       const handleMouseMove = (e: MouseEvent) => {
-        if (!isDraggingRef.current || !appRef.current) return;
+        if (!isDraggingRef.current || !worldRef.current) return;
         
         const dx = e.clientX - lastMouseRef.current.x;
         const dy = e.clientY - lastMouseRef.current.y;
         
-        appRef.current.stage.x += dx;
-        appRef.current.stage.y += dy;
+        worldRef.current.x += dx;
+        worldRef.current.y += dy;
         
         lastMouseRef.current = { x: e.clientX, y: e.clientY };
       };
@@ -220,13 +220,13 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
       };
 
       const handleWheel = (e: WheelEvent) => {
-        if (!appRef.current) return;
+        if (!worldRef.current) return;
         
         e.preventDefault();
         const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
-        const newZoom = Math.max(0.1, Math.min(5, appRef.current.stage.scale.x * zoomFactor));
+        const newZoom = Math.max(0.1, Math.min(5, worldRef.current.scale.x * zoomFactor));
         
-        appRef.current.stage.scale.set(newZoom);
+        worldRef.current.scale.set(newZoom);
         setCamera(prev => ({ ...prev, zoom: newZoom }));
       };
 

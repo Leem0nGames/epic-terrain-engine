@@ -105,6 +105,27 @@ export class TextureCache {
   }
 
   /**
+   * Obtener tamaño actual de la caché
+   */
+  static size(): number {
+    return this.cache.size;
+  }
+
+  /**
+   * Obtener número de hits
+   */
+  static getHitCount(): number {
+    return this.hitCount;
+  }
+
+  /**
+   * Obtener número de misses
+   */
+  static getMissCount(): number {
+    return this.missCount;
+  }
+
+  /**
    * Generar clave para textura de terreno
    */
   static generateKey(terrainCode: string, variation: number, mask: number): string {

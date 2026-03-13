@@ -111,6 +111,23 @@ Located in `/lib/terrain/TectonicMapGenerator.ts` and `/lib/terrain/TectonicPlat
 - **Noise-based**: Faster generation, good for quick prototypes or when geological accuracy isn't critical
 - **Tectonic plate**: Slower but produces more realistic continents, mountain ranges, and geological features
 
+## Asset Management System
+
+### AssetsManager
+Located in `/lib/terrain/AssetsManager.ts`:
+- Central coordinator for all asset loading and terrain assembly
+- Integrates AtlasLoader, LazyAssetLoader, TextureCache, and TerrainRegistry
+- Provides unified interface for terrain generation and graphics management
+- Supports both noise-based and tectonic plate terrain generation
+- Includes viewport-based lazy loading for performance optimization
+- Offers terrain assembly for hexagonal grids with automatic height-to-terrain mapping
+
+### Supporting Systems
+- **AtlasLoader** (`/lib/terrain/AtlasLoader.ts`): Loads and manages texture atlases for Pixi.js
+- **LazyAssetLoader** (`/lib/terrain/LazyAssetLoader.ts`): Loads assets on-demand based on viewport
+- **TextureCache** (`/lib/terrain/TextureCache.ts`): Caches rendered textures to avoid recalculation
+- **TerrainRegistry** (`/lib/terrain/TerrainRegistry.ts`): Defines terrain types and their properties
+
 ## When in Doubt
 1. Examine existing files in the same directory for patterns
 2. Check tsconfig.json and .eslintrc.json for compiler/linter rules

@@ -155,4 +155,11 @@ export class LazyAssetLoader {
       concurrent: this.currentLoads
     };
   }
+
+  /**
+   * Obtener tamaño de la cola de carga
+   */
+  static getQueueSize(): number {
+    return this.loadingQueue.length;
+  }
 }
