@@ -186,7 +186,19 @@ export function PixiHexGridRenderer({ grid, size, debug = false }: PixiHexGridRe
         debugGraphics.x = width / 2;
         debugGraphics.y = height / 2;
         app.stage.addChild(debugGraphics);
-        console.log('Debug circle added at center');
+        console.log('Debug circle added at stage center');
+      }
+      
+      // DEBUG: Dibujar un cuadrado azul en el mundo para verificar
+      if (world) {
+        const debugSquare = new PIXI.Graphics();
+        debugSquare.beginFill(0x0000FF);
+        debugSquare.drawRect(-25, -25, 50, 50);
+        debugSquare.endFill();
+        debugSquare.x = 0;
+        debugSquare.y = 0;
+        world.addChild(debugSquare);
+        console.log('Debug square added at world origin');
       }
         } catch (err) {
           console.error('Error cargando atlas:', err);
